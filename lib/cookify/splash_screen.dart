@@ -59,8 +59,8 @@ class _CookifySplashScreenState extends State<CookifySplashScreen> {
                 Expanded(
                   child: Center(
                     child: Image(
-                      image: AssetImage(
-                          './assets/images/apps/cookify/splash-1.png'),
+                      image:
+                          AssetImage('assets/images/apps/cookify/splash-1.png'),
                       width: 320,
                     ),
                   ),
@@ -72,10 +72,10 @@ class _CookifySplashScreenState extends State<CookifySplashScreen> {
                       splashColor: customTheme.cookifyPrimary.withAlpha(40),
                       padding: FxSpacing.y(12),
                       onPressed: () {
-                        Navigator.of(context, rootNavigator: true).push(
-                          MaterialPageRoute(
-                              builder: (context) => CookifyRegisterScreen()),
-                        );
+                        // Navigator.of(context, rootNavigator: true).push(
+                        //   MaterialPageRoute(
+                        //       builder: (context) => CookifyRegisterScreen()),
+                        // );
                       },
                       child: FxText.labelLarge(
                         "SIGN UP",
@@ -89,10 +89,10 @@ class _CookifySplashScreenState extends State<CookifySplashScreen> {
                       padding: FxSpacing.y(12),
                       borderRadiusAll: 4,
                       onPressed: () {
-                        Navigator.of(context, rootNavigator: true).push(
-                          MaterialPageRoute(
-                              builder: (context) => CookifyLoginScreen()),
-                        );
+                        // Navigator.of(context, rootNavigator: true).push(
+                        //   MaterialPageRoute(
+                        //       builder: (context) => CookifyLoginScreen()),
+                        // );
                       },
                       child: FxText.labelLarge(
                         "LOG IN",
