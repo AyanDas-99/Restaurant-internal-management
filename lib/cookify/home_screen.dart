@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
@@ -95,9 +97,11 @@ class _CookifyHomeScreenState extends State<CookifyHomeScreen> {
                     margin: FxSpacing.x(16),
                     child: InkWell(
                       onTap: () {
-                        Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                                builder: (context) => CookifyRecipeScreen()));
+                        // Navigator.of(context, rootNavigator: true).push(
+                        //     MaterialPageRoute(
+                        //         builder: (context) => CookifyRecipeScreen()));
+                        GoRouter.of(context)
+                            .pushNamed(RouterConstants.recipeScreen);
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -218,8 +222,9 @@ class _CookifyHomeScreenState extends State<CookifyHomeScreen> {
   Widget singleRecipe(Recipe recipe) {
     return InkWell(
       onTap: () {
-        Navigator.of(context, rootNavigator: true).push(
-            MaterialPageRoute(builder: (context) => CookifyRecipeScreen()));
+        // Navigator.of(context, rootNavigator: true).push(
+        //     MaterialPageRoute(builder: (context) => CookifyRecipeScreen()));
+        GoRouter.of(context).pushNamed(RouterConstants.recipeScreen);
       },
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(8)),

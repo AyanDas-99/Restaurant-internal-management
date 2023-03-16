@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:restaurant_management/theme/app_notifier.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +78,8 @@ class _CookifySplashScreenState extends State<CookifySplashScreen> {
                         //   MaterialPageRoute(
                         //       builder: (context) => CookifyRegisterScreen()),
                         // );
+                        GoRouter.of(context)
+                            .pushNamed(RouterConstants.registerScreen);
                       },
                       child: FxText.labelLarge(
                         "SIGN UP",
@@ -93,6 +97,8 @@ class _CookifySplashScreenState extends State<CookifySplashScreen> {
                         //   MaterialPageRoute(
                         //       builder: (context) => CookifyLoginScreen()),
                         // );
+                        GoRouter.of(context)
+                            .pushNamed(RouterConstants.loginScreen);
                       },
                       child: FxText.labelLarge(
                         "LOG IN",

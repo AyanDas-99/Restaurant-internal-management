@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
@@ -63,9 +65,10 @@ class _CookifyForgotPasswordScreenState
             FxButton.block(
                 borderRadiusAll: 8,
                 onPressed: () {
-                  Navigator.of(context, rootNavigator: true).push(
-                    MaterialPageRoute(builder: (context) => CookifyFullApp()),
-                  );
+                  // Navigator.of(context, rootNavigator: true).push(
+                  //   MaterialPageRoute(builder: (context) => CookifyFullApp()),
+                  // );
+                  GoRouter.of(context).pushNamed(RouterConstants.homeScreen);
                 },
                 backgroundColor: customTheme.cookifyPrimary,
                 child: FxText.labelLarge(
@@ -75,10 +78,12 @@ class _CookifyForgotPasswordScreenState
             FxSpacing.height(16),
             FxButton.text(
                 onPressed: () {
-                  Navigator.of(context, rootNavigator: true).push(
-                    MaterialPageRoute(
-                        builder: (context) => CookifyRegisterScreen()),
-                  );
+                  // Navigator.of(context, rootNavigator: true).push(
+                  //   MaterialPageRoute(
+                  //       builder: (context) => CookifyRegisterScreen()),
+                  // );
+                  GoRouter.of(context)
+                      .pushNamed(RouterConstants.registerScreen);
                 },
                 splashColor: customTheme.cookifyPrimary.withAlpha(40),
                 child: FxText.bodySmall("I haven\'t an account",

@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
@@ -92,10 +94,8 @@ class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
               child: FxButton.text(
                   padding: FxSpacing.zero,
                   onPressed: () {
-                    Navigator.of(context, rootNavigator: true).push(
-                      MaterialPageRoute(
-                          builder: (context) => CookifyForgotPasswordScreen()),
-                    );
+                    GoRouter.of(context)
+                        .pushNamed(RouterConstants.forgotPasswordScreen);
                   },
                   splashColor: customTheme.cookifyPrimary.withAlpha(40),
                   child: FxText.bodySmall("Forgot Password?",
@@ -105,9 +105,10 @@ class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
             FxButton.block(
                 borderRadiusAll: 8,
                 onPressed: () {
-                  Navigator.of(context, rootNavigator: true).push(
-                    MaterialPageRoute(builder: (context) => CookifyFullApp()),
-                  );
+                  // Navigator.of(context, rootNavigator: true).push(
+                  //   MaterialPageRoute(builder: (context) => CookifyFullApp()),
+                  // );
+                  GoRouter.of(context).pushNamed(RouterConstants.homeScreen);
                 },
                 backgroundColor: customTheme.cookifyPrimary,
                 child: FxText.labelLarge(
@@ -117,10 +118,11 @@ class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
             FxSpacing.height(16),
             FxButton.text(
                 onPressed: () {
-                  Navigator.of(context, rootNavigator: true).push(
-                    MaterialPageRoute(
-                        builder: (context) => CookifyLoginScreen()),
-                  );
+                  // Navigator.of(context, rootNavigator: true).push(
+                  //   MaterialPageRoute(
+                  //       builder: (context) => CookifyLoginScreen()),
+                  // );
+                  GoRouter.of(context).pushNamed(RouterConstants.loginScreen);
                 },
                 splashColor: customTheme.cookifyPrimary.withAlpha(40),
                 child: FxText.labelMedium("I have already an account",

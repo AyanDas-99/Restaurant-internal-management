@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_management/cookify/full_app.dart';
 import 'package:restaurant_management/cookify/login_screen.dart';
 import 'package:restaurant_management/cookify/splash_screen.dart';
+import 'package:restaurant_management/router/router_config.dart';
 import 'package:restaurant_management/theme/app_notifier.dart';
 
 void main() {
@@ -19,9 +20,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: AppRouter().router,
       debugShowCheckedModeBanner: false,
-      home: CookifySplashScreen(),
     );
   }
 }
