@@ -1,0 +1,47 @@
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
+import 'package:restaurant_management/logic/repositories/firebase_auth.dart';
+
+part 'auth_event.dart';
+part 'auth_state.dart';
+
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  FAuth fAuth = FAuth();
+  AuthBloc({required FAuth}) : super(AuthUnAuthenticated()) {
+    // Register Request
+    on<RegisterRequested>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        await fAuth.registerWithEmail(
+            email: event.email, password: event.password);
+        emit(AuthAuthenticated());
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+
+    // Login request
+    on<LoginRequested>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        await fAuth.loginWithEmail(
+            email: event.email, password: event.password);
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+
+    //Sign out request
+
+    on<SignOutRequested>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        await fAuth.signOut();
+        emit(AuthUnAuthenticated());
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+  }
+}

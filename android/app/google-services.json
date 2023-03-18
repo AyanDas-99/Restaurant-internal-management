@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "621397756732",
+    "project_id": "restaurant-management-b24e2",
+    "storage_bucket": "restaurant-management-b24e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621397756732:android:4f00b5b6a2de26177a6c39",
+        "android_client_info": {
+          "package_name": "com.example.restaurant_management"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "621397756732-t5vtkajb1uk8rq6jtdp4c62lfpe72s1v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4gTnWU8bmN0a65CAJYpaYLFWUHoJYuG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "621397756732-t5vtkajb1uk8rq6jtdp4c62lfpe72s1v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
