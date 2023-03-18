@@ -27,6 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await fAuth.loginWithEmail(
             email: event.email, password: event.password);
+        emit(AuthAuthenticated());
       } catch (e) {
         emit(AuthError(e.toString()));
       }

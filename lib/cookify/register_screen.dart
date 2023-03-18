@@ -15,7 +15,6 @@ class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
 // text controllers
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPassword = TextEditingController();
 
   late CustomTheme customTheme;
   late ThemeData theme;
@@ -128,10 +127,10 @@ class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
                       if (emailController.text == "" ||
                           passwordController.text == "") {
                         showSnackBar("All fields are required");
+                      } else {
+                        context.read<AuthBloc>().add(RegisterRequested(
+                            emailController.text, passwordController.text));
                       }
-
-                      context.read<AuthBloc>().add(RegisterRequested(
-                          emailController.text, passwordController.text));
                     },
                     backgroundColor: customTheme.cookifyPrimary,
                     child: FxText.labelLarge(
@@ -143,10 +142,6 @@ class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
             FxSpacing.height(16),
             FxButton.text(
                 onPressed: () {
-                  // Navigator.of(context, rootNavigator: true).push(
-                  //   MaterialPageRoute(
-                  //       builder: (context) => CookifyLoginScreen()),
-                  // );
                   GoRouter.of(context).pushNamed(RouterConstants.loginScreen);
                 },
                 splashColor: customTheme.cookifyPrimary.withAlpha(40),
