@@ -1,4 +1,6 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurant_management/logic/bloc/auth_bloc.dart';
 import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,9 @@ class _CookifyForgotPasswordScreenState
     extends State<CookifyForgotPasswordScreen> {
   late ThemeData theme;
   late CustomTheme customTheme;
+
+  // Email text controller
+  TextEditingController emailController = TextEditingController();
 
   @override
   void initState() {
@@ -49,6 +54,7 @@ class _CookifyForgotPasswordScreenState
             ),
             FxSpacing.height(32),
             FxTextField(
+              controller: emailController,
               floatingLabelBehavior: FloatingLabelBehavior.never,
               autoFocusedBorder: true,
               textFieldStyle: FxTextFieldStyle.outlined,
@@ -62,19 +68,38 @@ class _CookifyForgotPasswordScreenState
               cursorColor: customTheme.cookifyPrimary,
             ),
             FxSpacing.height(32),
-            FxButton.block(
-                borderRadiusAll: 8,
-                onPressed: () {
-                  // Navigator.of(context, rootNavigator: true).push(
-                  //   MaterialPageRoute(builder: (context) => CookifyFullApp()),
-                  // );
-                  GoRouter.of(context).pushNamed(RouterConstants.homeScreen);
-                },
-                backgroundColor: customTheme.cookifyPrimary,
-                child: FxText.labelLarge(
-                  "Forgot Password",
-                  color: customTheme.cookifyOnPrimary,
-                )),
+            BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) {
+                if (state is AuthError) {
+                  showSnackBar(state.error);
+                }
+                if (state is PassResetEmailSent) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("Password reset email sent !"),
+                    backgroundColor: CustomTheme.green,
+                  ));
+                  Future.delayed(Duration(seconds: 5), () {
+                    context.goNamed(RouterConstants.loginScreen);
+                  });
+                }
+              },
+              child: FxButton.block(
+                  borderRadiusAll: 8,
+                  onPressed: () {
+                    if (emailController.text == "") {
+                      showSnackBar("Email is required");
+                    } else {
+                      context
+                          .read<AuthBloc>()
+                          .add(PasswordResetRequested(emailController.text));
+                    }
+                  },
+                  backgroundColor: customTheme.cookifyPrimary,
+                  child: FxText.labelLarge(
+                    "Forgot Password",
+                    color: customTheme.cookifyOnPrimary,
+                  )),
+            ),
             FxSpacing.height(16),
             FxButton.text(
                 onPressed: () {
@@ -93,5 +118,12 @@ class _CookifyForgotPasswordScreenState
         ),
       ),
     );
+  }
+
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      backgroundColor: customTheme.cookifyPrimary,
+    ));
   }
 }

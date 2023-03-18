@@ -44,5 +44,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError(e.toString()));
       }
     });
+
+    // Password Reset Request
+    on<PasswordResetRequested>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        await fAuth.forgotPassword(email: event.email);
+        emit(PassResetEmailSent());
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
   }
 }

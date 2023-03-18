@@ -18,3 +18,5 @@ class AuthError extends AuthState {
 
   AuthError(this.error);
 }
+
+class PassResetEmailSent extends AuthState {}

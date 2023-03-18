@@ -33,4 +33,13 @@ class FAuth {
       throw Exception(e);
     }
   }
+
+  // Forgot password
+  Future<void> forgotPassword({required String email}) async {
+    try {
+      firebaseAuth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

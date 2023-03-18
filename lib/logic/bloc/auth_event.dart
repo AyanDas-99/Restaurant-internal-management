@@ -18,3 +18,9 @@ class LoginRequested implements AuthEvent {
 }
 
 class SignOutRequested implements AuthEvent {}
+
+class PasswordResetRequested implements AuthEvent {
+  final String email;
+
+  PasswordResetRequested(this.email);
+}
