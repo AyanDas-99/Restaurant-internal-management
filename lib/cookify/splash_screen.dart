@@ -55,7 +55,7 @@ class _CookifySplashScreenState extends State<CookifySplashScreen> {
             child: Column(
               children: [
                 FxText.displaySmall(
-                  "Welcome to Cookify",
+                  "Welcome to Light House Restaurant",
                   color: customTheme.cookifyPrimary,
                 ),
                 Expanded(

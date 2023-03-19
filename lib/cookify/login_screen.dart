@@ -6,10 +6,6 @@ import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
 
-import 'forgot_password_screen.dart';
-import 'full_app.dart';
-import 'register_screen.dart';
-
 class CookifyLoginScreen extends StatefulWidget {
   @override
   _CookifyLoginScreenState createState() => _CookifyLoginScreenState();
@@ -135,6 +131,24 @@ class _CookifyLoginScreenState extends State<CookifyLoginScreen> {
                     ));
               },
             ),
+            FxSpacing.height(10),
+            FxButton.block(
+                borderRadiusAll: 8,
+                onPressed: () {
+                  context.read<AuthBloc>().add(GoogleSignInRequested());
+                },
+                backgroundColor: customTheme.carolinaBlue,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(FxBoxIcons.bxl_google),
+                    FxSpacing.width(10),
+                    FxText.labelLarge(
+                      "Google Sign In",
+                      color: customTheme.cookifyOnPrimary,
+                    ),
+                  ],
+                )),
             FxSpacing.height(16),
             FxButton.text(
                 onPressed: () {

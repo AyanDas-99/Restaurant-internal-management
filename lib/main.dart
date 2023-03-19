@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_management/logic/bloc/auth_bloc.dart';
+import 'package:restaurant_management/logic/bloc/bloc_observer.dart';
 import 'package:restaurant_management/logic/repositories/firebase_auth.dart';
 import 'package:restaurant_management/router/router_config.dart';
 import 'package:restaurant_management/theme/app_notifier.dart';
@@ -11,6 +12,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Firebaes
   await Firebase.initializeApp();
+
+  Bloc.observer = AppBlocObserver();
 
   runApp(MultiProvider(
     providers: [

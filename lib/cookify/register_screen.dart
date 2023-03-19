@@ -118,8 +118,7 @@ class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
               },
               builder: (context, state) {
                 if (state is AuthLoading) {
-                  return FxButton.block(
-                      onPressed: null, child: CircularProgressIndicator());
+                  return const CircularProgressIndicator();
                 }
                 return FxButton.block(
                     borderRadiusAll: 8,
@@ -139,6 +138,25 @@ class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
                     ));
               },
             ),
+            FxSpacing.height(10),
+            FxButton.block(
+                borderRadiusAll: 8,
+                onPressed: () {
+                  context.read<AuthBloc>().add(GoogleSignInRequested());
+                },
+                backgroundColor: customTheme.carolinaBlue,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(FxBoxIcons.bxl_google),
+                    FxSpacing.width(10),
+                    FxText.labelLarge(
+                      "Google Sign In",
+                      color: customTheme.cookifyOnPrimary,
+                    ),
+                  ],
+                )),
+
             FxSpacing.height(16),
             FxButton.text(
                 onPressed: () {

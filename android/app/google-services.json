@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "621397756732-t5vtkajb1uk8rq6jtdp4c62lfpe72s1v.apps.googleusercontent.com",
+          "client_id": "621397756732-t9ep10g3116c37e8jvees9bbbrrppspn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.restaurant_management",
+            "certificate_hash": "4737fec973d1332b1227aae5eb00d9bd81d4e5b1"
+          }
+        },
+        {
+          "client_id": "621397756732-5n0n88e988kuoujsnikqaml4040fh2ba.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "621397756732-t5vtkajb1uk8rq6jtdp4c62lfpe72s1v.apps.googleusercontent.com",
+              "client_id": "621397756732-5n0n88e988kuoujsnikqaml4040fh2ba.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

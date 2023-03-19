@@ -51,6 +51,6 @@ class AppRouter {
             MaterialPage(child: CookifyRecipeScreen()),
       ),
     ],
-    initialLocation: '/splash',
+    initialLocation: '/',
   );
 }

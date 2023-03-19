@@ -34,7 +34,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     //Sign out request
-
     on<SignOutRequested>((event, emit) async {
       emit(AuthLoading());
       try {
@@ -51,6 +50,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await fAuth.forgotPassword(email: event.email);
         emit(PassResetEmailSent());
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+
+    // GoogleSignIn request
+    on<GoogleSignInRequested>((event, emit) async {
+      emit(GoogleLoginLoading());
+      try {
+        await fAuth.googleLogIn();
+        emit(AuthAuthenticated());
       } catch (e) {
         emit(AuthError(e.toString()));
       }

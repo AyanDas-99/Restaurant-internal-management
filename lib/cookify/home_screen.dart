@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurant_management/logic/bloc/auth_bloc.dart';
 import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +21,9 @@ class _CookifyHomeScreenState extends State<CookifyHomeScreen> {
   late List<Recipe> trendingRecipe;
   late CustomTheme customTheme;
   late ThemeData theme;
+
+  // User data
+  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -43,13 +50,15 @@ class _CookifyHomeScreenState extends State<CookifyHomeScreen> {
                 children: [
                   Container(
                     margin: FxSpacing.x(16),
-                    child: FxText.headlineLarge("Hello Den,",
-                        color: customTheme.cookifyPrimary, fontWeight: 800),
+                    child: FxText.headlineLarge(
+                        user?.displayName ?? "Hello user",
+                        color: customTheme.cookifyPrimary,
+                        fontWeight: 800),
                   ),
                   Container(
                     margin: FxSpacing.x(16),
                     child: FxText.bodyMedium(
-                        "Excited to cook something new today?",
+                        "Excited to try something new today?",
                         color: theme.colorScheme.onBackground,
                         letterSpacing: 0,
                         xMuted: true,

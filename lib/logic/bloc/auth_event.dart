@@ -24,3 +24,5 @@ class PasswordResetRequested implements AuthEvent {
 
   PasswordResetRequested(this.email);
 }
+
+class GoogleSignInRequested implements AuthEvent {}

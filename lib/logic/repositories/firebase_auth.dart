@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FAuth {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  GoogleSignIn _googleSignIn = GoogleSignIn();
 
   //Email Register user
   Future<void> registerWithEmail(
@@ -25,12 +27,34 @@ class FAuth {
     }
   }
 
+  // Google Login
+  Future<void> googleLogIn() async {
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+          await _googleSignIn.signIn();
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount!.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken);
+      await firebaseAuth.signInWithCredential(credential);
+    } catch (e) {
+      throw e;
+    }
+  }
+
   // Sign out
   Future<void> signOut() async {
     try {
       firebaseAuth.signOut();
     } catch (e) {
       throw Exception(e);
+    }
+
+    try {
+      await _googleSignIn.signOut();
+    } catch (e) {
+      print(e);
     }
   }
 
