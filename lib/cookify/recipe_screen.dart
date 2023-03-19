@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
@@ -14,12 +15,15 @@ class _CookifyRecipeScreenState extends State<CookifyRecipeScreen> {
   late CustomTheme customTheme;
   late ThemeData theme;
 
+  late List<Widget> ingredients;
+
   @override
   void initState() {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
     recipe = FullRecipe.getSingle();
+    ingredients = buildIngredientList();
   }
 
   @override
@@ -52,10 +56,10 @@ class _CookifyRecipeScreenState extends State<CookifyRecipeScreen> {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {},
           backgroundColor: customTheme.cookifyPrimary,
-          label: FxText.bodyMedium("Watch Video",
+          label: FxText.bodyMedium("Order now",
               color: customTheme.cookifyOnPrimary, fontWeight: 600),
-          icon: Icon(
-            Icons.play_circle_fill,
+          icon: FaIcon(
+            FontAwesomeIcons.bowlRice,
             color: customTheme.cookifyOnPrimary,
           ),
         ),
@@ -72,45 +76,24 @@ class _CookifyRecipeScreenState extends State<CookifyRecipeScreen> {
                   letterSpacing: 0,
                   fontWeight: 600),
               FxSpacing.height(24),
-              Row(
-                children: [
-                  Column(
-                    children: [
-                      FxText.titleLarge("Nutritions",
-                          fontWeight: 700, letterSpacing: -0.2),
-                      FxSpacing.height(16),
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: buildNutritionList()),
-                    ],
+              FxSpacing.width(24),
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image(
+                    image: AssetImage(recipe.image),
+                    height: 200,
+                    fit: BoxFit.cover,
                   ),
-                  FxSpacing.width(24),
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(200),
-                      child: Image(
-                        image: AssetImage(recipe.image),
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
               FxSpacing.height(24),
-              FxText.titleLarge("Ingredients",
+              FxText.titleLarge("Main Ingredients",
                   fontWeight: 700, letterSpacing: -0.2),
               FxSpacing.height(12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: buildIngredientList(),
+              Wrap(
+                children: ingredients,
               ),
-              FxSpacing.height(24),
-              FxText.titleLarge("Preparation",
-                  fontWeight: 700, letterSpacing: -0.2),
-              FxSpacing.height(16),
-              FxText.bodyMedium(recipe.preparation,
-                  fontWeight: 500, letterSpacing: 0, muted: true),
               FxSpacing.height(80)
             ],
           ),
@@ -119,56 +102,18 @@ class _CookifyRecipeScreenState extends State<CookifyRecipeScreen> {
     );
   }
 
-  List<Widget> buildNutritionList() {
-    List<Widget> list = [];
-    for (int i = 0; i < recipe.nutritions.length; i++) {
-      list.add(singleNutrition(recipe.nutritions[i]));
-      if (i + 1 < recipe.nutritions.length) list.add(FxSpacing.height(16));
-    }
-    return list;
-  }
-
-  Widget singleNutrition(Nutrition nutrition) {
-    return FxContainer(
-      borderRadiusAll: 50,
-      padding: FxSpacing.fromLTRB(8, 8, 12, 8),
-      color: customTheme.cookifyPrimary.withAlpha(40),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FxContainer.bordered(
-              paddingAll: 4,
-              width: 32,
-              height: 32,
-              borderRadiusAll: 16,
-              color: customTheme.cookifyPrimary.withAlpha(200),
-              border: Border.all(color: customTheme.cookifyPrimary, width: 1),
-              child: Center(
-                  child: FxText.bodySmall(
-                      FxTextUtils.doubleToString(
-                        nutrition.unit,
-                      ),
-                      letterSpacing: 0,
-                      color: customTheme.cookifyOnPrimary))),
-          FxSpacing.width(8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FxText.bodySmall(nutrition.name, fontWeight: 600),
-              FxText.bodySmall(nutrition.unitType,
-                  fontSize: 10, xMuted: true, fontWeight: 600),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
   List<Widget> buildIngredientList() {
     List<Widget> list = [];
     for (Ingredient ingredient in recipe.ingredients) {
-      list.add(FxText.bodySmall(ingredient.ingredient,
-          muted: true, height: 1.7, letterSpacing: 0));
+      list.add(Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5), color: customTheme.border),
+        margin: FxSpacing.all(2),
+        padding: FxSpacing.all(5),
+        child: FxText(
+          ingredient.ingredient,
+        ),
+      ));
     }
     return list;
   }

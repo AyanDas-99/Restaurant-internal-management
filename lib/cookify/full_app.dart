@@ -34,21 +34,6 @@ class _CookifyFullAppState extends State<CookifyFullApp> {
               color: customTheme.cookifyPrimary, fontWeight: 800),
           itemList: [
             FxBottomNavigationBarItem(
-              page: CookifyHomeScreen(),
-              icon: FxTwoToneIcon(
-                FxTwoToneMdiIcons.home,
-                color: customTheme.cookifyPrimary.withAlpha(240),
-                size: 24,
-              ),
-              activeIcon: Icon(
-                Icons.cottage,
-                color: customTheme.cookifyPrimary,
-                size: 24,
-              ),
-              title: "Home",
-              activeIconColor: customTheme.cookifyPrimary,
-            ),
-            FxBottomNavigationBarItem(
               page: CookifyShowcaseScreen(),
               icon: FxTwoToneIcon(
                 FxTwoToneMdiIcons.import_contacts,
@@ -60,7 +45,7 @@ class _CookifyFullAppState extends State<CookifyFullApp> {
                 color: customTheme.cookifyPrimary.withAlpha(240),
                 size: 24,
               ),
-              title: "Showcase",
+              title: "Menu",
               activeIconColor: customTheme.cookifyPrimary,
               activeTitleColor: customTheme.cookifyPrimary,
             ),

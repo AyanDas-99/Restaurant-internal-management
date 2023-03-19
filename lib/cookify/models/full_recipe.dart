@@ -40,12 +40,10 @@ class Ingredient {
 
   static List<Ingredient> getList() {
     return [
-      Ingredient("2 cups pecans, divided"),
-      Ingredient("1 tablespoon unsalted butter, melted"),
-      Ingredient("1½ tablespoons grated Parmesan cheese (Optional)"),
-      Ingredient("1 teaspoon sea salt"),
-      Ingredient("½ teaspoon ground black pepper"),
-      Ingredient("1 tablespoon lemon juice (Optional)"),
+      Ingredient("pecans"),
+      Ingredient("unsalted butter"),
+      Ingredient("Parmesan cheese"),
+      Ingredient("lemon juice"),
     ];
   }
 }

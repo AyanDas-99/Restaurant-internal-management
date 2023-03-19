@@ -65,43 +65,6 @@ class _CookifyHomeScreenState extends State<CookifyHomeScreen> {
                         fontWeight: 700),
                   ),
                   FxSpacing.height(16),
-                  FxContainer(
-                      margin: FxSpacing.x(16),
-                      onTap: () {
-                        Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                                builder: (context) => CookifyRecipeScreen()));
-                      },
-                      splashColor: customTheme.cookifyPrimary.withAlpha(40),
-                      color: customTheme.cookifyPrimary.withAlpha(30),
-                      child: Row(
-                        children: [
-                          FxTwoToneIcon(
-                            FxTwoToneMdiIcons.outdoor_grill,
-                            color: customTheme.cookifyPrimary,
-                            size: 48,
-                          ),
-                          FxSpacing.width(16),
-                          Expanded(
-                              child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FxText.bodySmall(
-                                  "You have 12 recipes that\nyou haven\'t tried yet",
-                                  fontWeight: 700),
-                              FxButton.text(
-                                  padding: FxSpacing.zero,
-                                  onPressed: () {},
-                                  splashColor:
-                                      customTheme.cookifyPrimary.withAlpha(40),
-                                  child: FxText.labelMedium("See Recipes",
-                                      color: customTheme.cookifyPrimary,
-                                      decoration: TextDecoration.underline))
-                            ],
-                          ))
-                        ],
-                      )),
-                  FxSpacing.height(16),
                   Container(
                     margin: FxSpacing.x(16),
                     child: InkWell(

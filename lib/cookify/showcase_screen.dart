@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
@@ -12,6 +13,8 @@ class CookifyShowcaseScreen extends StatefulWidget {
 }
 
 class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
+  final User? user = FirebaseAuth.instance.currentUser;
+
   late List<Showcase> showcases;
   late List<Category> categories;
   late CustomTheme customTheme;
@@ -35,11 +38,27 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
       child: SafeArea(
         child: Scaffold(
           body: Container(
-            padding: FxSpacing.top(24),
+            padding: FxSpacing.top(10),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Container(
+                      padding:
+                          FxSpacing.symmetric(horizontal: 16, vertical: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FxText.bodyLarge(
+                            "Hello ${user?.displayName},",
+                            fontSize: 20,
+                            fontWeight: 700,
+                            color: customTheme.cookifyPrimary,
+                          ),
+                          FxText.bodySmall(
+                              "Excited to try something new today?")
+                        ],
+                      )),
                   Container(
                     padding: FxSpacing.x(16),
                     child: Row(
@@ -85,15 +104,6 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                     child: Column(
                       children: buildShowcases(),
                     ),
-                  ),
-                  Center(
-                    child: SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                customTheme.cookifyPrimary),
-                            strokeWidth: 2)),
                   ),
                   FxSpacing.height(24)
                 ],
@@ -155,9 +165,6 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
               FxSpacing.width(4),
               FxText.bodySmall(showcase.timeInMinutes.toString() + "'",
                   muted: true),
-              FxSpacing.width(24),
-              FxText.bodySmall(showcase.ingredients.toString() + " Ingredients",
-                  muted: true)
             ],
           ),
         ],
