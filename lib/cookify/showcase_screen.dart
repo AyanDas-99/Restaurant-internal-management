@@ -1,8 +1,14 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_management/data/provider/menu_provider.dart';
+import 'package:restaurant_management/data/repositories/menu_repository.dart';
+import 'package:restaurant_management/logic/bloc/menu_bloc.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
-
+import 'models/menu_model.dart';
 import 'recipe_screen.dart';
 import 'models/category.dart';
 import 'models/showcase.dart';
@@ -14,6 +20,10 @@ class CookifyShowcaseScreen extends StatefulWidget {
 
 class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
+  final menuRepository = MenuRepository();
+  final firestoreMenu = FirestoreMenu();
+
+  late MenuBloc _menuBloc;
 
   late List<Showcase> showcases;
   late List<Category> categories;
@@ -23,6 +33,9 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
   @override
   void initState() {
     super.initState();
+    _menuBloc =
+        MenuBloc(menuRepository: menuRepository, firestoreMenu: firestoreMenu)
+          ..add(FullMenuRequested());
     showcases = Showcase.getList();
     categories = Category.getList();
     customTheme = AppTheme.customTheme;
@@ -101,8 +114,22 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                   ),
                   Container(
                     padding: FxSpacing.fromLTRB(16, 24, 16, 0),
-                    child: Column(
-                      children: buildShowcases(),
+                    child: BlocBuilder<MenuBloc, MenuState>(
+                      bloc: _menuBloc,
+                      builder: (context, state) {
+                        if (state is MenuLoaded) {
+                          return Column(
+                            children: buildShowcases(state.menu),
+                          );
+                        }
+                        if (state is MenuError) {
+                          return Text(state.errorMessage);
+                        }
+                        return Container(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      },
                     ),
                   ),
                   FxSpacing.height(24)
@@ -115,17 +142,11 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
     );
   }
 
-  List<Widget> buildShowcases() {
-    List<Widget> list = [];
-
-    for (Showcase showcase in showcases) {
-      list.add(singleShowcase(showcase));
-    }
-
-    return list;
+  List<Widget> buildShowcases(Menu menu) {
+    return menu.menuItems.map((e) => singleShowcase(e)).toList();
   }
 
-  Widget singleShowcase(Showcase showcase) {
+  Widget singleShowcase(MenuItem showcase) {
     return FxContainer(
       onTap: () {
         Navigator.of(context, rootNavigator: true).push(
@@ -139,12 +160,13 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(8)),
             child: Image(
-              image: AssetImage(showcase.image),
+              image: NetworkImage(showcase.image),
             ),
           ),
           FxSpacing.height(8),
-          FxText.bodyLarge(showcase.title, fontWeight: 700, letterSpacing: 0),
-          FxText.bodySmall(showcase.body,
+          FxText.bodyLarge(showcase.item_name,
+              fontWeight: 700, letterSpacing: 0),
+          FxText.bodySmall(showcase.description,
               muted: true, fontWeight: 500, letterSpacing: -0.1),
           FxSpacing.height(16),
           Row(
@@ -162,9 +184,6 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                 size: 16,
                 color: theme.colorScheme.onBackground.withAlpha(200),
               ),
-              FxSpacing.width(4),
-              FxText.bodySmall(showcase.timeInMinutes.toString() + "'",
-                  muted: true),
             ],
           ),
         ],

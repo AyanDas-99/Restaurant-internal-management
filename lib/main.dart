@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_management/data/provider/menu_provider.dart';
+import 'package:restaurant_management/data/repositories/menu_repository.dart';
 import 'package:restaurant_management/logic/bloc/auth_bloc.dart';
 import 'package:restaurant_management/logic/bloc/bloc_observer.dart';
-import 'package:restaurant_management/logic/repositories/firebase_auth.dart';
+import 'package:restaurant_management/data/provider/firebase_auth.dart';
+import 'package:restaurant_management/logic/bloc/menu_bloc.dart';
 import 'package:restaurant_management/router/router_config.dart';
 import 'package:restaurant_management/theme/app_notifier.dart';
 
@@ -28,11 +32,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => FAuth(),
-      child: BlocProvider(
-        create: (context) =>
-            AuthBloc(FAuth: RepositoryProvider.of<FAuth>(context)),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+          create: (context) => FAuth(),
+        ),
+        RepositoryProvider(
+          create: (context) => MenuRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => FirestoreMenu(),
+        ),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                AuthBloc(FAuth: RepositoryProvider.of<FAuth>(context)),
+          ),
+          BlocProvider(
+            create: (context) => MenuBloc(
+                menuRepository: RepositoryProvider.of<MenuRepository>(context),
+                firestoreMenu: RepositoryProvider.of<FirestoreMenu>(context)),
+          ),
+        ],
         child: MaterialApp.router(
           routerConfig: AppRouter().router,
           debugShowCheckedModeBanner: false,

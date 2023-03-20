@@ -9,7 +9,7 @@ import 'package:restaurant_management/cookify/login_screen.dart';
 import 'package:restaurant_management/cookify/recipe_screen.dart';
 import 'package:restaurant_management/cookify/register_screen.dart';
 import 'package:restaurant_management/cookify/splash_screen.dart';
-import 'package:restaurant_management/logic/repositories/firebase_auth.dart';
+import 'package:restaurant_management/data/provider/firebase_auth.dart';
 import 'package:restaurant_management/router/router_constants.dart';
 
 class AppRouter {
