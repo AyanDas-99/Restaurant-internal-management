@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:restaurant_management/logic/repositories/firebase_auth.dart';
+import 'package:restaurant_management/data/provider/firebase_auth.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
