@@ -22,7 +22,7 @@ class CategoryMenuRequested extends MenuEvent {
 }
 
 class SearchMenuRequested extends MenuEvent {
-  final Stream query;
+  final String query;
 
   SearchMenuRequested(this.query);
 }

@@ -29,7 +29,7 @@ class FirestoreMenu {
   }
 
   // Search for items
-  Future<List> getSearchedMenuList({required String search}) async {
+  Future<List> getSearchedMenuList(String search) async {
     CollectionReference menuRef = db.collection("menu");
     List documents = [];
     // Search in tags

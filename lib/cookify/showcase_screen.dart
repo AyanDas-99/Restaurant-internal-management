@@ -23,12 +23,18 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
   final menuRepository = MenuRepository();
   final firestoreMenu = FirestoreMenu();
 
+// Bloc
   late MenuBloc _menuBloc;
 
   late List<Showcase> showcases;
   late List<Category> categories;
   late CustomTheme customTheme;
   late ThemeData theme;
+
+  String selectedCategory = "Menu(All)";
+
+  // Controller
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -40,6 +46,32 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
     categories = Category.getList();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
+  }
+
+  // Select category
+  void selectCategory(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+
+    _menuBloc.add(CategoryMenuRequested(category.toLowerCase()));
+  }
+
+  // Select Home
+  void selectHome() {
+    setState(() {
+      selectedCategory = 'Menu(All)';
+    });
+    _menuBloc.add(FullMenuRequested());
+  }
+
+  // Search for menu
+  void searchMenu(String query) {
+    setState(() {
+      selectedCategory = query;
+    });
+    _menuBloc.add(SearchMenuRequested(query));
+    print("The query is " + query);
   }
 
   @override
@@ -77,7 +109,10 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                     child: Row(
                       children: [
                         Expanded(
+                          // Search field
                           child: FxTextField(
+                            controller: searchController,
+                            onSubmitted: (value) => searchMenu(value),
                             prefixIcon: Icon(Icons.search,
                                 color: theme.colorScheme.onBackground
                                     .withAlpha(160)),
@@ -93,13 +128,16 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                           ),
                         ),
                         FxSpacing.width(16),
-                        FxContainer(
-                          padding: FxSpacing.all(12),
-                          color: customTheme.cookifyPrimary.withAlpha(80),
-                          child: Icon(
-                            Icons.local_dining_outlined,
-                            size: 24,
-                            color: customTheme.cookifyPrimary,
+                        InkWell(
+                          onTap: () => searchMenu(searchController.text),
+                          child: FxContainer(
+                            padding: FxSpacing.all(12),
+                            color: customTheme.cookifyPrimary.withAlpha(80),
+                            child: Icon(
+                              Icons.local_dining_outlined,
+                              size: 24,
+                              color: customTheme.cookifyPrimary,
+                            ),
                           ),
                         ),
                       ],
@@ -110,6 +148,17 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: buildCategories(),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Center(
+                      child: FxText.bodyMedium(
+                        selectedCategory,
+                        fontSize: 20,
+                        fontWeight: 600,
+                        color: customTheme.cookifyPrimary,
+                      ),
                     ),
                   ),
                   Container(
@@ -180,10 +229,12 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
               FxText.bodySmall(showcase.likes.toString(), muted: true),
               FxSpacing.width(16),
               Icon(
-                Icons.schedule,
+                Icons.currency_rupee,
                 size: 16,
                 color: theme.colorScheme.onBackground.withAlpha(200),
               ),
+              FxSpacing.width(4),
+              FxText.bodySmall(showcase.price.toString(), muted: true),
             ],
           ),
         ],
@@ -196,30 +247,35 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
 
     list.add(FxSpacing.width(16));
 
+    bool ishome = true;
     for (Category category in categories) {
-      list.add(singleCategory(category));
+      list.add(singleCategory(category, ishome));
       list.add(FxSpacing.width(16));
+      ishome = false;
     }
     return list;
   }
 
-  Widget singleCategory(Category category) {
-    return FxContainer(
-      paddingAll: 16,
-      color: customTheme.cookifyPrimary.withAlpha(40),
-      child: Column(
-        children: [
-          FxTwoToneIcon(
-            category.icon,
-            color: customTheme.cookifyPrimary,
-            size: 28,
-          ),
-          FxSpacing.height(8),
-          FxText.bodySmall(
-            category.title,
-            color: customTheme.cookifyPrimary,
-          )
-        ],
+  Widget singleCategory(Category category, bool isHome) {
+    return InkWell(
+      onTap: () => isHome ? selectHome() : selectCategory(category.title),
+      child: FxContainer(
+        paddingAll: 16,
+        color: customTheme.cookifyPrimary.withAlpha(40),
+        child: Column(
+          children: [
+            Icon(
+              category.icon,
+              color: customTheme.cookifyPrimary,
+              size: 28,
+            ),
+            FxSpacing.height(8),
+            FxText.bodySmall(
+              category.title,
+              color: customTheme.cookifyPrimary,
+            )
+          ],
+        ),
       ),
     );
   }

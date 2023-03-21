@@ -1,19 +1,21 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Category {
-  final FxTwoToneIconData icon;
+  final IconData icon;
   final String title;
 
   Category(this.icon, this.title);
 
   static List<Category> getList() {
     return [
-      Category(FxTwoToneMdiIcons.kitchen, "All"),
-      Category(FxTwoToneMdiIcons.fastfood, "Fastfood"),
-      Category(FxTwoToneMdiIcons.local_pizza, "Pizza"),
-      Category(FxTwoToneMdiIcons.cake, "Cake"),
-      Category(FxTwoToneMdiIcons.set_meal, "Sea Food"),
-      Category(FxTwoToneMdiIcons.local_cafe, "Tea"),
+      Category(Icons.shelves, "All"),
+      Category(Icons.icecream, "Desert"),
+      Category(FontAwesomeIcons.bowlFood, "Snack"),
+      Category(Icons.cake, "Cake"),
+      Category(FontAwesomeIcons.cloudMeatball, "Chicken"),
     ];
   }
 }

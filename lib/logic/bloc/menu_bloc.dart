@@ -17,12 +17,41 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       emit(MenuLoading());
       try {
         var fullMenu =
-            await menuRepository.getMenu(firestoreMenu.getFullMenuList);
+            await menuRepository.getFullMenu(firestoreMenu.getFullMenuList);
         emit(MenuLoaded(menu: fullMenu));
       } catch (e) {
         print(e);
         emit(MenuError("Sorry :( Menu not found"));
       }
     });
+
+    // Category based menu
+    on<CategoryMenuRequested>(
+      (event, emit) async {
+        emit(MenuLoading());
+        try {
+          var fullMenu = await menuRepository.getMenu(
+              firestoreMenu.getCategoryMenuList, event.category);
+          emit(MenuLoaded(menu: fullMenu));
+        } catch (e) {
+          print(e);
+          emit(MenuError("Sorry :( Menu not found"));
+        }
+      },
+    );
+
+    on<SearchMenuRequested>(
+      (event, emit) async {
+        emit(MenuLoading());
+        try {
+          var fullMenu = await menuRepository.getMenu(
+              firestoreMenu.getSearchedMenuList, event.query);
+          emit(MenuLoaded(menu: fullMenu));
+        } catch (e) {
+          print(e);
+          emit(MenuError("Sorry :( Menu not found"));
+        }
+      },
+    );
   }
 }
