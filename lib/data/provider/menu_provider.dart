@@ -18,6 +18,7 @@ class FirestoreMenu {
 
   // Get menu based on tags
   Future<List> getTagMenuList({required String tag}) async {
+    tag = tag.toLowerCase();
     CollectionReference menuRef = db.collection("menu");
     List documents = [];
     await menuRef.where("tags", arrayContains: tag).get().then((querySnapshot) {
@@ -30,6 +31,7 @@ class FirestoreMenu {
 
   // Search for items
   Future<List> getSearchedMenuList(String search) async {
+    search = search.toLowerCase();
     CollectionReference menuRef = db.collection("menu");
     List documents = [];
     // Search in tags
@@ -77,6 +79,7 @@ class FirestoreMenu {
 
   // Search for categoryu
   Future<List> getCategoryMenuList(String category) async {
+    category = category.toLowerCase();
     CollectionReference menuRef = db.collection("menu");
     List documents = [];
     await menuRef
@@ -89,5 +92,14 @@ class FirestoreMenu {
     });
 
     return documents;
+  }
+
+  Future<List> getItemNames() async {
+    List<String> items = [];
+    CollectionReference menuRef = db.collection("menu");
+    await menuRef.get().then((querySnapshot) {
+      querySnapshot.docs.map((e) => items.add(e["item_name"]));
+    });
+    return items;
   }
 }

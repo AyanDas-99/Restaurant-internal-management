@@ -1,15 +1,19 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:restaurant_management/data/provider/menu_provider.dart';
 import 'package:restaurant_management/data/repositories/menu_repository.dart';
+import 'package:restaurant_management/flutx/lib/extensions/string_extension.dart';
 import 'package:restaurant_management/logic/bloc/menu_bloc.dart';
+import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
 import 'models/menu_model.dart';
-import 'recipe_screen.dart';
 import 'models/category.dart';
 import 'models/showcase.dart';
 
@@ -25,6 +29,8 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
 
 // Bloc
   late MenuBloc _menuBloc;
+  // focus node for search bar
+  final FocusNode _focusNode = FocusNode();
 
   late List<Showcase> showcases;
   late List<Category> categories;
@@ -46,6 +52,28 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
     categories = Category.getList();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
+  }
+
+  @override
+  void dispose() {
+    _menuBloc.close();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  // Get menu item names
+  // Store the names in menuItemNames list
+  // Return items list based on pattern
+  Future<Iterable<String>> getItemNames(String pattern) async {
+    List<String> menuItemNames = [];
+    var menuItems =
+        await menuRepository.getFullMenu(firestoreMenu.getFullMenuList);
+    for (var item in menuItems.menuItems) {
+      menuItemNames.add(item.item_name);
+    }
+    Iterable<String> list =
+        menuItemNames.where((element) => element.contains(pattern));
+    return list;
   }
 
   // Select category
@@ -109,27 +137,37 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                     child: Row(
                       children: [
                         Expanded(
-                          // Search field
-                          child: FxTextField(
-                            controller: searchController,
-                            onSubmitted: (value) => searchMenu(value),
-                            prefixIcon: Icon(Icons.search,
-                                color: theme.colorScheme.onBackground
-                                    .withAlpha(160)),
-                            filled: true,
-                            labelTextColor: AppTheme
-                                .theme.colorScheme.onBackground
-                                .withAlpha(200),
-                            labelText: "Search",
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            cursorColor: customTheme.cookifyPrimary,
-                            focusedBorderColor: Colors.transparent,
-                            fillColor: customTheme.card,
+                          child: TypeAheadField(
+                            textFieldConfiguration: TextFieldConfiguration(
+                                onSubmitted: (value) => searchMenu(value),
+                                focusNode: _focusNode,
+                                controller: searchController,
+                                style: DefaultTextStyle.of(context).style,
+                                decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: customTheme.cookifyPrimary)),
+                                    hintText: "Search",
+                                    border: OutlineInputBorder())),
+                            suggestionsCallback: (pattern) async {
+                              return await getItemNames(pattern);
+                            },
+                            itemBuilder: (context, suggestion) {
+                              return ListTile(
+                                title: Text(suggestion),
+                              );
+                            },
+                            onSuggestionSelected: (suggestion) {
+                              searchController.text = suggestion;
+                            },
                           ),
                         ),
                         FxSpacing.width(16),
                         InkWell(
-                          onTap: () => searchMenu(searchController.text),
+                          onTap: () {
+                            searchMenu(searchController.text);
+                            _focusNode.unfocus();
+                          },
                           child: FxContainer(
                             padding: FxSpacing.all(12),
                             color: customTheme.cookifyPrimary.withAlpha(80),
@@ -176,7 +214,10 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                         }
                         return Container(
                           padding: EdgeInsets.only(top: 20),
-                          child: Center(child: CircularProgressIndicator()),
+                          child: Center(
+                              child: CircularProgressIndicator(
+                            color: customTheme.cookifyPrimary,
+                          )),
                         );
                       },
                     ),
@@ -198,8 +239,7 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
   Widget singleShowcase(MenuItem showcase) {
     return FxContainer(
       onTap: () {
-        Navigator.of(context, rootNavigator: true).push(
-            MaterialPageRoute(builder: (context) => CookifyRecipeScreen()));
+        _showSheet(showcase, context);
       },
       color: Colors.transparent,
       padding: FxSpacing.bottom(32),
@@ -213,7 +253,7 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
             ),
           ),
           FxSpacing.height(8),
-          FxText.bodyLarge(showcase.item_name,
+          FxText.bodyLarge(showcase.item_name.capitalize,
               fontWeight: 700, letterSpacing: 0),
           FxText.bodySmall(showcase.description,
               muted: true, fontWeight: 500, letterSpacing: -0.1),
@@ -278,5 +318,64 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
         ),
       ),
     );
+  }
+
+  _showSheet(MenuItem item, BuildContext pageContext) {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (context) => Container(
+              color: customTheme.cookifyOnPrimary,
+              child: CupertinoActionSheet(
+                title: FxText.titleLarge(item.item_name.capitalize,
+                    fontWeight: 700, letterSpacing: 0.5),
+                message: FxText.titleSmall("Select any action",
+                    fontWeight: 500, letterSpacing: 0.2),
+                actions: <Widget>[
+                  CupertinoActionSheetAction(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(FontAwesomeIcons.cartPlus),
+                        FxSpacing.width(20),
+                        FxText.bodyLarge(
+                          "Add to order",
+                          fontWeight: 600,
+                        )
+                      ],
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  CupertinoActionSheetAction(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(FontAwesomeIcons.info),
+                        FxSpacing.width(20),
+                        FxText.bodyLarge(
+                          "Know more",
+                          fontWeight: 600,
+                        )
+                      ],
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      GoRouter.of(context)
+                          .pushNamed(RouterConstants.recipeScreen);
+                    },
+                  )
+                ],
+                cancelButton: Container(
+                  color: Color.fromARGB(255, 255, 169, 169),
+                  child: CupertinoActionSheetAction(
+                    child: FxText.titleMedium("Cancel", fontWeight: 600),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
+            ));
   }
 }
