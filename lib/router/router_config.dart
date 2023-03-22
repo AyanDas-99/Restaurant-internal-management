@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:restaurant_management/cookify/forgot_password_screen.dart';
 import 'package:restaurant_management/cookify/full_app.dart';
 import 'package:restaurant_management/cookify/login_screen.dart';
+import 'package:restaurant_management/cookify/models/menu_model.dart';
 import 'package:restaurant_management/cookify/recipe_screen.dart';
 import 'package:restaurant_management/cookify/register_screen.dart';
 import 'package:restaurant_management/cookify/splash_screen.dart';
@@ -45,11 +46,12 @@ class AppRouter {
         pageBuilder: (context, state) => MaterialPage(child: CookifyFullApp()),
       ),
       GoRoute(
-        name: RouterConstants.recipeScreen,
-        path: '/recipe',
-        pageBuilder: (context, state) =>
-            MaterialPage(child: CookifyRecipeScreen()),
-      ),
+          name: RouterConstants.recipeScreen,
+          path: '/recipe',
+          builder: (context, state) {
+            MenuItem item = state.extra as MenuItem;
+            return MenuItemDetailScreen(menuItem: item);
+          }),
     ],
     initialLocation: '/',
   );

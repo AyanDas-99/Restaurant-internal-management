@@ -8,7 +8,7 @@ class MenuRepository {
               'item_name': e["item_name"],
               'description': e["description"],
               'image': e["image"],
-              'ingredients': ["", ""],
+              'ingredients': e["ingredients"],
               'is_veg': e["is_veg"],
               'likes': e["likes"],
               'price': e["price"],

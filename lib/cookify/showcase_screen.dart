@@ -361,8 +361,8 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
-                      GoRouter.of(context)
-                          .pushNamed(RouterConstants.recipeScreen);
+                      GoRouter.of(pageContext)
+                          .pushNamed(RouterConstants.recipeScreen, extra: item);
                     },
                   )
                 ],

@@ -1,29 +1,29 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:restaurant_management/cookify/models/menu_model.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
 
 import 'models/full_recipe.dart';
 
-class CookifyRecipeScreen extends StatefulWidget {
+class MenuItemDetailScreen extends StatefulWidget {
+  final MenuItem menuItem;
+
+  const MenuItemDetailScreen({super.key, required this.menuItem});
+
   @override
-  _CookifyRecipeScreenState createState() => _CookifyRecipeScreenState();
+  _MenuItemDetailScreenState createState() => _MenuItemDetailScreenState();
 }
 
-class _CookifyRecipeScreenState extends State<CookifyRecipeScreen> {
-  late FullRecipe recipe;
+class _MenuItemDetailScreenState extends State<MenuItemDetailScreen> {
   late CustomTheme customTheme;
   late ThemeData theme;
-
-  late List<Widget> ingredients;
 
   @override
   void initState() {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
-    recipe = FullRecipe.getSingle();
-    ingredients = buildIngredientList();
   }
 
   @override
@@ -56,10 +56,10 @@ class _CookifyRecipeScreenState extends State<CookifyRecipeScreen> {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {},
           backgroundColor: customTheme.cookifyPrimary,
-          label: FxText.bodyMedium("Order now",
+          label: FxText.bodyMedium("Add to order",
               color: customTheme.cookifyOnPrimary, fontWeight: 600),
           icon: FaIcon(
-            FontAwesomeIcons.bowlRice,
+            FontAwesomeIcons.cartPlus,
             color: customTheme.cookifyOnPrimary,
           ),
         ),
@@ -68,10 +68,10 @@ class _CookifyRecipeScreenState extends State<CookifyRecipeScreen> {
           child: ListView(
             padding: FxSpacing.fromLTRB(24, 4, 24, 0),
             children: [
-              FxText.displaySmall(recipe.title,
+              FxText.displaySmall(widget.menuItem.item_name,
                   fontWeight: 800, letterSpacing: -0.2),
               FxSpacing.height(8),
-              FxText.bodyMedium(recipe.body,
+              FxText.bodyMedium(widget.menuItem.description,
                   color: theme.colorScheme.onBackground.withAlpha(140),
                   letterSpacing: 0,
                   fontWeight: 600),
@@ -81,7 +81,7 @@ class _CookifyRecipeScreenState extends State<CookifyRecipeScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image(
-                    image: AssetImage(recipe.image),
+                    image: NetworkImage(widget.menuItem.image),
                     height: 200,
                     fit: BoxFit.cover,
                   ),
@@ -92,7 +92,7 @@ class _CookifyRecipeScreenState extends State<CookifyRecipeScreen> {
                   fontWeight: 700, letterSpacing: -0.2),
               FxSpacing.height(12),
               Wrap(
-                children: ingredients,
+                children: buildIngredientList(widget.menuItem.ingredients),
               ),
               FxSpacing.height(80)
             ],
@@ -102,17 +102,15 @@ class _CookifyRecipeScreenState extends State<CookifyRecipeScreen> {
     );
   }
 
-  List<Widget> buildIngredientList() {
+  List<Widget> buildIngredientList(List ingredientList) {
     List<Widget> list = [];
-    for (Ingredient ingredient in recipe.ingredients) {
+    for (var ingredient in ingredientList) {
       list.add(Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5), color: customTheme.border),
         margin: FxSpacing.all(2),
         padding: FxSpacing.all(5),
-        child: FxText(
-          ingredient.ingredient,
-        ),
+        child: FxText(ingredient.toString()),
       ));
     }
     return list;

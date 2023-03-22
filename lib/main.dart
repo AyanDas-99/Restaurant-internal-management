@@ -19,7 +19,6 @@ void main() async {
 
   Bloc.observer = AppBlocObserver();
 
-  // printSearch();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => AppNotifier()),
@@ -64,11 +63,4 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-}
-
-void printSearch() async {
-  var menu = MenuRepository();
-  var firemenu = FirestoreMenu();
-  var data = await menu.getMenu(firemenu.getSearchedMenuList, 'spicy');
-  print(data);
 }
