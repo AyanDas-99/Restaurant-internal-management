@@ -1,3 +1,7 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:restaurant_management/logic/bloc/auth_bloc.dart';
+import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
@@ -186,19 +190,26 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
                   ),
                   FxSpacing.height(16),
                   Center(
-                      child: FxButton.rounded(
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true).push(
-                        MaterialPageRoute(
-                            builder: (context) => CookifySplashScreen()),
+                      child: BlocConsumer<AuthBloc, AuthState>(
+                    listener: (context, state) {
+                      if (state is AuthUnAuthenticated) {
+                        GoRouter.of(context)
+                            .goNamed(RouterConstants.loginScreen);
+                      }
+                    },
+                    builder: (context, state) {
+                      return FxButton.rounded(
+                        onPressed: () {
+                          context.read<AuthBloc>().add(SignOutRequested());
+                        },
+                        child: FxText.labelLarge(
+                          "LOGOUT",
+                          color: customTheme.cookifyOnPrimary,
+                        ),
+                        elevation: 2,
+                        backgroundColor: customTheme.cookifyPrimary,
                       );
                     },
-                    child: FxText.labelLarge(
-                      "LOGOUT",
-                      color: customTheme.cookifyOnPrimary,
-                    ),
-                    elevation: 2,
-                    backgroundColor: customTheme.cookifyPrimary,
                   ))
                 ],
               )),

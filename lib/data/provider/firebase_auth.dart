@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:restaurant_management/data/provider/user_provider.dart';
 
 class FAuth {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
+  FirestoreUser _firestoreUser = FirestoreUser();
 
   //Email Register user
   Future<void> registerWithEmail(
@@ -11,6 +13,7 @@ class FAuth {
     try {
       UserCredential userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
+      _firestoreUser.addEmailUserToDb(userCredential);
     } catch (e) {
       throw Exception(e);
     }
@@ -38,6 +41,7 @@ class FAuth {
           accessToken: googleSignInAuthentication.accessToken,
           idToken: googleSignInAuthentication.idToken);
       await firebaseAuth.signInWithCredential(credential);
+      await _firestoreUser.addGoogleUserToDb(googleSignInAccount);
     } catch (e) {
       throw e;
     }
