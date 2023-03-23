@@ -123,7 +123,7 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           FxText.bodyLarge(
-                            "Hello ${user?.displayName},",
+                            "Hello ${user?.displayName ?? ""}",
                             fontSize: 20,
                             fontWeight: 700,
                             color: customTheme.cookifyPrimary,
@@ -233,10 +233,10 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
   }
 
   List<Widget> buildShowcases(Menu menu) {
-    return menu.menuItems.map((e) => singleShowcase(e)).toList();
+    return menu.menuItems.map((e) => singleShowcase(e, false)).toList();
   }
 
-  Widget singleShowcase(MenuItem showcase) {
+  Widget singleShowcase(MenuItem showcase, bool isFavorite) {
     return FxContainer(
       onTap: () {
         _showSheet(showcase, context);

@@ -13,23 +13,26 @@ class FirestoreUser {
         .count()
         .get();
     if (noAccount.count == 0) {
-      userRef
+      await userRef
           .doc(account.email)
           .set({"name": account.displayName, "favorites": []});
     }
   }
 
-  addEmailUserToDb(UserCredential credential) async {
+  addEmailUserToDb({required String name, required String email}) async {
     CollectionReference userRef = db.collection("users");
-    var noAccount = await userRef
-        .where('Document ID', isEqualTo: credential.user!.email.toString())
-        .count()
-        .get();
+    var noAccount =
+        await userRef.where('Document ID', isEqualTo: email).count().get();
     print("No. of accounts: " + noAccount.count.toString());
     if (noAccount.count == 0) {
-      userRef
-          .doc(credential.user!.email)
-          .set({"name": credential.user!.displayName, "favorites": []});
+      await userRef.doc(email).set({"name": name, "favorites": []});
     }
+  }
+
+  likeItem(String email, String item_name) async {
+    var userRef = db.collection("users").doc(email);
+    await userRef.update({
+      "favorites": FieldValue.arrayUnion([item_name])
+    });
   }
 }

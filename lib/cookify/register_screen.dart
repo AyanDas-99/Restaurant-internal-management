@@ -13,6 +13,7 @@ class CookifyRegisterScreen extends StatefulWidget {
 
 class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
 // text controllers
+  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -63,6 +64,21 @@ class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
             //   cursorColor: customTheme.cookifyPrimary,
             // ),
             // FxSpacing.height(24),
+            FxTextField(
+              controller: nameController,
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              autoFocusedBorder: true,
+              textFieldStyle: FxTextFieldStyle.outlined,
+              textFieldType: FxTextFieldType.name,
+              filled: true,
+              fillColor: customTheme.cookifyPrimary.withAlpha(40),
+              enabledBorderColor: customTheme.cookifyPrimary,
+              focusedBorderColor: customTheme.cookifyPrimary,
+              prefixIconColor: customTheme.cookifyPrimary,
+              labelTextColor: customTheme.cookifyPrimary,
+              cursorColor: customTheme.cookifyPrimary,
+            ),
+            FxSpacing.height(24),
             FxTextField(
               controller: emailController,
               floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -118,17 +134,20 @@ class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
               },
               builder: (context, state) {
                 if (state is AuthLoading) {
-                  return const CircularProgressIndicator();
+                  return Center(child: CircularProgressIndicator());
                 }
                 return FxButton.block(
                     borderRadiusAll: 8,
                     onPressed: () {
                       if (emailController.text == "" ||
-                          passwordController.text == "") {
+                          passwordController.text == "" ||
+                          nameController.text == "") {
                         showSnackBar("All fields are required");
                       } else {
                         context.read<AuthBloc>().add(RegisterRequested(
-                            emailController.text, passwordController.text));
+                            emailController.text,
+                            passwordController.text,
+                            nameController.text));
                       }
                     },
                     backgroundColor: customTheme.cookifyPrimary,

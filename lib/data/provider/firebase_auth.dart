@@ -9,11 +9,14 @@ class FAuth {
 
   //Email Register user
   Future<void> registerWithEmail(
-      {required String email, required String password}) async {
+      {required String email,
+      required String password,
+      required String name}) async {
     try {
       UserCredential userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-      _firestoreUser.addEmailUserToDb(userCredential);
+      await userCredential.user?.updateDisplayName(name);
+      await _firestoreUser.addEmailUserToDb(name: name, email: email);
     } catch (e) {
       throw Exception(e);
     }
