@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirestoreUser {
@@ -7,7 +6,6 @@ class FirestoreUser {
 
   addGoogleUserToDb(GoogleSignInAccount account) async {
     CollectionReference userRef = db.collection("users");
-    print("Im in ....\nyo I'm in...");
     AggregateQuerySnapshot noAccount = await userRef
         .where('Document ID', isEqualTo: account.email)
         .count()
@@ -34,5 +32,25 @@ class FirestoreUser {
     await userRef.update({
       "favorites": FieldValue.arrayUnion([item_name])
     });
+  }
+
+  removeLikeFromItem(String email, String item_name) async {
+    var userRef = db.collection("users").doc(email);
+    await userRef.update({
+      "favorites": FieldValue.arrayRemove([item_name])
+    });
+    print("$item_name removed");
+  }
+
+  Future<List> getLikedItems(String email) async {
+    List favorites = [];
+    DocumentReference user = db.collection("users").doc(email);
+    await user.get().then((value) {
+      final data = value.data() as Map<String, dynamic>;
+      favorites = data["favorites"];
+      print(data);
+    }, onError: (e) => print(e));
+    print(favorites);
+    return favorites;
   }
 }

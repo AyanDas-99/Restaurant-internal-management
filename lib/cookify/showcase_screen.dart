@@ -6,9 +6,11 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_management/data/provider/menu_provider.dart';
+import 'package:restaurant_management/data/provider/user_provider.dart';
 import 'package:restaurant_management/data/repositories/menu_repository.dart';
 import 'package:restaurant_management/flutx/lib/extensions/string_extension.dart';
 import 'package:restaurant_management/logic/bloc/menu_bloc.dart';
+import 'package:restaurant_management/logic/bloc/user_like_bloc.dart';
 import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +28,11 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
   final menuRepository = MenuRepository();
   final firestoreMenu = FirestoreMenu();
+  final firestoreUserData = FirestoreUser();
 
 // Bloc
   late MenuBloc _menuBloc;
+  late UserLikeBloc _likeBloc;
   // focus node for search bar
   final FocusNode _focusNode = FocusNode();
 
@@ -48,6 +52,7 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
     _menuBloc =
         MenuBloc(menuRepository: menuRepository, firestoreMenu: firestoreMenu)
           ..add(FullMenuRequested());
+    _likeBloc = UserLikeBloc()..add(GetLikes(user?.email ?? ""));
     showcases = Showcase.getList();
     categories = Category.getList();
     customTheme = AppTheme.customTheme;
@@ -58,6 +63,7 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
   void dispose() {
     _menuBloc.close();
     _focusNode.dispose();
+    _likeBloc.close();
     super.dispose();
   }
 
@@ -165,8 +171,13 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                         FxSpacing.width(16),
                         InkWell(
                           onTap: () {
-                            searchMenu(searchController.text);
-                            _focusNode.unfocus();
+                            // searchMenu(searchController.text);
+                            // _focusNode.unfocus();
+                            if (user?.email != null) {
+                              firestoreUserData
+                                  .getLikedItems(user?.email ?? "");
+                            }
+                            print(user?.email);
                           },
                           child: FxContainer(
                             padding: FxSpacing.all(12),
@@ -203,22 +214,33 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                     padding: FxSpacing.fromLTRB(16, 24, 16, 0),
                     child: BlocBuilder<MenuBloc, MenuState>(
                       bloc: _menuBloc,
-                      builder: (context, state) {
-                        if (state is MenuLoaded) {
-                          return Column(
-                            children: buildShowcases(state.menu),
-                          );
-                        }
-                        if (state is MenuError) {
-                          return Text(state.errorMessage);
-                        }
-                        return Container(
-                          padding: EdgeInsets.only(top: 20),
-                          child: Center(
-                              child: CircularProgressIndicator(
-                            color: customTheme.cookifyPrimary,
-                          )),
-                        );
+                      builder: (context, menuState) {
+                        return BlocBuilder<UserLikeBloc, UserLikeState>(
+                            bloc: _likeBloc,
+                            builder: (context, likeState) {
+                              if (menuState is MenuLoaded &&
+                                  likeState is UserLikes) {
+                                return Column(
+                                  children: buildShowcases(menuState.menu),
+                                );
+                              }
+                              if (menuState is MenuError) {
+                                return Text(menuState.errorMessage);
+                              }
+
+                              if (menuState is MenuLoaded) {
+                                return Column(
+                                  children: buildShowcases(menuState.menu),
+                                );
+                              }
+                              return Container(
+                                padding: EdgeInsets.only(top: 20),
+                                child: Center(
+                                    child: CircularProgressIndicator(
+                                  color: customTheme.cookifyPrimary,
+                                )),
+                              );
+                            });
                       },
                     ),
                   ),
@@ -233,10 +255,10 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
   }
 
   List<Widget> buildShowcases(Menu menu) {
-    return menu.menuItems.map((e) => singleShowcase(e, false)).toList();
+    return menu.menuItems.map((e) => singleShowcase(e)).toList();
   }
 
-  Widget singleShowcase(MenuItem showcase, bool isFavorite) {
+  Widget singleShowcase(MenuItem showcase) {
     return FxContainer(
       onTap: () {
         _showSheet(showcase, context);
@@ -260,11 +282,37 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
           FxSpacing.height(16),
           Row(
             children: [
-              Icon(
-                Icons.favorite_border,
-                size: 16,
-                color: theme.colorScheme.onBackground.withAlpha(200),
-              ),
+              BlocConsumer<UserLikeBloc, UserLikeState>(
+                  bloc: _likeBloc,
+                  listener: (context, state) {
+                    // TODO: implement listener
+                  },
+                  builder: (context, state) {
+                    if (state is UserLikes) {
+                      return InkWell(
+                        onTap: () {
+                          if (state.likedItems.contains(showcase.item_name)) {
+                            _likeBloc.add(RemoveItemLike(
+                                showcase.item_name, user?.email ?? ""));
+                          } else
+                            _likeBloc.add(LikeItem(
+                                showcase.item_name, user?.email ?? ""));
+                        },
+                        child: Icon(
+                          (state.likedItems.contains(showcase.item_name)
+                              ? Icons.favorite
+                              : Icons.favorite_border_outlined),
+                          size: 16,
+                          color: Colors.red[800],
+                        ),
+                      );
+                    }
+                    return Icon(
+                      Icons.favorite_border_rounded,
+                      size: 17,
+                      color: Colors.red,
+                    );
+                  }),
               FxSpacing.width(4),
               FxText.bodySmall(showcase.likes.toString(), muted: true),
               FxSpacing.width(16),
