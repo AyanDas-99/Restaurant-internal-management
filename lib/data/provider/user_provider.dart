@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:restaurant_management/data/provider/menu_provider.dart';
 
 class FirestoreUser {
   var db = FirebaseFirestore.instance;
+  var firestoreMenu = FirestoreMenu();
 
   addGoogleUserToDb(GoogleSignInAccount account) async {
     CollectionReference userRef = db.collection("users");
@@ -32,6 +34,7 @@ class FirestoreUser {
     await userRef.update({
       "favorites": FieldValue.arrayUnion([item_name])
     });
+    await firestoreMenu.increaseLike(item_name);
   }
 
   removeLikeFromItem(String email, String item_name) async {
@@ -39,7 +42,7 @@ class FirestoreUser {
     await userRef.update({
       "favorites": FieldValue.arrayRemove([item_name])
     });
-    print("$item_name removed");
+    await firestoreMenu.decreaseLike(item_name);
   }
 
   Future<List> getLikedItems(String email) async {

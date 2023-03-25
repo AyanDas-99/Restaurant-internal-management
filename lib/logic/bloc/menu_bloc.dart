@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:restaurant_management/cookify/models/menu_model.dart';
 import 'package:restaurant_management/data/provider/menu_provider.dart';
 import 'package:restaurant_management/data/repositories/menu_repository.dart';
+import 'package:restaurant_management/logic/bloc/user_like_bloc.dart';
 
 part 'menu_event.dart';
 part 'menu_state.dart';
@@ -53,5 +54,17 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         }
       },
     );
+
+    on<FavoriteMenuRequested>((event, emit) async {
+      emit(MenuLoading());
+      try {
+        var menu = await menuRepository.GetFavoriteMenu(
+            firestoreMenu.getLikedItems, event.likedItems);
+        emit(MenuLoaded(menu: menu));
+      } catch (e) {
+        print(e);
+        emit(MenuError(e.toString()));
+      }
+    });
   }
 }

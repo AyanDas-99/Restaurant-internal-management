@@ -165,19 +165,16 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                             },
                             onSuggestionSelected: (suggestion) {
                               searchController.text = suggestion;
+                              searchMenu(searchController.text);
+                              _focusNode.unfocus();
                             },
                           ),
                         ),
                         FxSpacing.width(16),
                         InkWell(
                           onTap: () {
-                            // searchMenu(searchController.text);
-                            // _focusNode.unfocus();
-                            if (user?.email != null) {
-                              firestoreUserData
-                                  .getLikedItems(user?.email ?? "");
-                            }
-                            print(user?.email);
+                            searchMenu(searchController.text);
+                            _focusNode.unfocus();
                           },
                           child: FxContainer(
                             padding: FxSpacing.all(12),

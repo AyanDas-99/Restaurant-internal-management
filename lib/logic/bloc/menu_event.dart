@@ -26,3 +26,9 @@ class SearchMenuRequested extends MenuEvent {
 
   SearchMenuRequested(this.query);
 }
+
+class FavoriteMenuRequested extends MenuEvent {
+  final List likedItems;
+
+  FavoriteMenuRequested(this.likedItems);
+}

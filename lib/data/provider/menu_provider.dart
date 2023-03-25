@@ -102,4 +102,44 @@ class FirestoreMenu {
     });
     return items;
   }
+
+  Future<void> increaseLike(String item_name) async {
+    List<DocumentReference> documents = [];
+    CollectionReference menuRef = db.collection("menu");
+    await menuRef.where("item_name", isEqualTo: item_name).get().then((value) {
+      for (var doc in value.docs) {
+        documents.add(doc.reference);
+      }
+    });
+
+    await documents[0].update({"likes": FieldValue.increment(1)});
+  }
+
+  Future<void> decreaseLike(String item_name) async {
+    List<DocumentReference> documents = [];
+    CollectionReference menuRef = db.collection("menu");
+    await menuRef.where("item_name", isEqualTo: item_name).get().then((value) {
+      for (var doc in value.docs) {
+        documents.add(doc.reference);
+      }
+    });
+
+    await documents[0].update({"likes": FieldValue.increment(-1)});
+  }
+
+  Future<List> getLikedItems(List likedItem) async {
+    List documents = [];
+    CollectionReference menuRef = db.collection("menu");
+    for (var item_name in likedItem) {
+      await menuRef
+          .where("item_name", isEqualTo: item_name)
+          .get()
+          .then((querySnapshot) {
+        for (var docSnapshot in querySnapshot.docs) {
+          documents.add(docSnapshot.data());
+        }
+      });
+    }
+    return documents;
+  }
 }
