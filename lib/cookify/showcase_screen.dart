@@ -11,6 +11,7 @@ import 'package:restaurant_management/data/provider/user_provider.dart';
 import 'package:restaurant_management/data/repositories/menu_repository.dart';
 import 'package:restaurant_management/flutx/lib/extensions/string_extension.dart';
 import 'package:restaurant_management/logic/bloc/menu_bloc.dart';
+import 'package:restaurant_management/logic/bloc/order_bloc.dart';
 import 'package:restaurant_management/logic/bloc/user_like_bloc.dart';
 import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
@@ -409,6 +410,7 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
+                      _showDialog(item);
                     },
                   ),
                   CupertinoActionSheetAction(
@@ -441,5 +443,116 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                 ),
               ),
             ));
+  }
+
+  void _showDialog(MenuItem item) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => _SimpleDialog(
+              item: item,
+            ));
+  }
+}
+
+class _SimpleDialog extends StatefulWidget {
+  int quantity = 1;
+  final MenuItem item;
+
+  _SimpleDialog({super.key, required this.item});
+
+  @override
+  State<_SimpleDialog> createState() => _SimpleDialogState();
+}
+
+class _SimpleDialogState extends State<_SimpleDialog> {
+  @override
+  Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+    return Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8.0))),
+      child: Container(
+        padding: FxSpacing.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10.0,
+              offset: Offset(0.0, 10.0),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            FxText.titleLarge(
+              "Set quantity",
+              fontWeight: 700,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      if (widget.quantity == 0) return null;
+                      setState(() {
+                        widget.quantity--;
+                      });
+                    },
+                    icon: Icon(Icons.remove)),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(widget.quantity.toString()),
+                SizedBox(
+                  width: 10,
+                ),
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        widget.quantity++;
+                      });
+                    },
+                    icon: Icon(Icons.add)),
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  child: Text("Cancel"),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll(Colors.redAccent)),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<OrderBloc>().add(OrderAddRequest(
+                        item: widget.item, quantity: widget.quantity));
+                    context.pop();
+                  },
+                  child: Text("Ok"),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(Colors.green)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

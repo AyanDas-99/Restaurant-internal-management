@@ -9,6 +9,7 @@ import 'package:restaurant_management/logic/bloc/auth_bloc.dart';
 import 'package:restaurant_management/logic/bloc/bloc_observer.dart';
 import 'package:restaurant_management/data/provider/firebase_auth.dart';
 import 'package:restaurant_management/logic/bloc/menu_bloc.dart';
+import 'package:restaurant_management/logic/bloc/order_bloc.dart';
 import 'package:restaurant_management/logic/bloc/user_like_bloc.dart';
 import 'package:restaurant_management/router/router_config.dart';
 import 'package:restaurant_management/theme/app_notifier.dart';
@@ -58,6 +59,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => UserLikeBloc(),
+          ),
+          BlocProvider(
+            create: (context) => OrderBloc(),
           ),
         ],
         child: MaterialApp.router(
