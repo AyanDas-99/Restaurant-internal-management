@@ -65,11 +65,17 @@ class Order_drawer extends StatelessWidget {
         title: Text(item.item.item_name),
         subtitle: Text("Quantity: ${item.quantity.toString()}"),
         trailing: Builder(builder: (context) {
-          return IconButton(
+          return ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                minimumSize: Size.zero,
+                padding: EdgeInsets.zero,
+                elevation: 0.0,
+              ),
               onPressed: () {
                 context.read<OrderBloc>().add(OrderRemoveRequest(item: item));
               },
-              icon: Icon(Icons.remove));
+              child: Icon(Icons.remove));
         }));
   }
 }

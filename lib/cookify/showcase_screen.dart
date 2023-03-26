@@ -120,40 +120,70 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
         child: Scaffold(
           endDrawer: Order_drawer(),
           appBar: AppBar(
+            title: Container(
+                padding: FxSpacing.symmetric(horizontal: 16, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FxText.bodyLarge(
+                      "Hello ${user?.displayName ?? ""}",
+                      fontSize: 20,
+                      fontWeight: 700,
+                      color: customTheme.cookifyPrimary,
+                    ),
+                  ],
+                )),
             actions: [
               Builder(builder: (context) {
-                return IconButton(
-                    onPressed: () => Scaffold.of(context).openEndDrawer(),
-                    icon: Icon(
-                      FxBoxIcons.bx_dish,
-                      color: Colors.deepOrange,
-                    ));
+                return BlocBuilder<OrderBloc, OrderState>(
+                  builder: (context, state) {
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Badge(
+                        isLabelVisible: state.orders.length != 0,
+                        alignment: AlignmentDirectional.bottomCenter,
+                        label: Text(state.orders.length.toString()),
+                        child: IconButton(
+                            onPressed: () =>
+                                Scaffold.of(context).openEndDrawer(),
+                            icon: Icon(
+                              FxBoxIcons.bx_dish,
+                              color: Colors.deepOrange,
+                            )),
+                      ),
+                    );
+                  },
+                );
               })
             ],
             elevation: 0.0,
           ),
           body: Container(
-            padding: FxSpacing.top(10),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                      padding:
-                          FxSpacing.symmetric(horizontal: 16, vertical: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FxText.bodyLarge(
-                            "Hello ${user?.displayName ?? ""}",
-                            fontSize: 20,
-                            fontWeight: 700,
-                            color: customTheme.cookifyPrimary,
-                          ),
-                          FxText.bodySmall(
-                              "Excited to try something new today?")
-                        ],
-                      )),
+                  Padding(
+                    padding: FxSpacing.xy(16, 10),
+                    child:
+                        FxText.bodySmall("Excited to try something new today?"),
+                  ),
+                  // Container(
+                  //     padding:
+                  //         FxSpacing.symmetric(horizontal: 16, vertical: 20),
+                  //     child: Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         FxText.bodyLarge(
+                  //           "Hello ${user?.displayName ?? ""}",
+                  //           fontSize: 20,
+                  //           fontWeight: 700,
+                  //           color: customTheme.cookifyPrimary,
+                  //         ),
+                  //         FxText.bodySmall(
+                  //             "Excited to try something new today?")
+                  //       ],
+                  //     )),
                   Container(
                     padding: FxSpacing.x(16),
                     child: Row(
@@ -189,8 +219,10 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
                         FxSpacing.width(16),
                         InkWell(
                           onTap: () {
-                            searchMenu(searchController.text);
-                            _focusNode.unfocus();
+                            if (searchController.text != "") {
+                              searchMenu(searchController.text);
+                              _focusNode.unfocus();
+                            }
                           },
                           child: FxContainer(
                             padding: FxSpacing.all(12),
