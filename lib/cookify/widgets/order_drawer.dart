@@ -35,15 +35,18 @@ class Order_drawer extends StatelessWidget {
   }
 
   Widget OrderListItem(OrderItem item) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        CircleAvatar(
+    return ListTile(
+        leading: CircleAvatar(
           backgroundImage: NetworkImage(item.item.image),
         ),
-        Text(item.item.item_name),
-        Text(item.quantity.toString())
-      ],
-    );
+        title: Text(item.item.item_name),
+        subtitle: Text("Quantity: ${item.quantity.toString()}"),
+        trailing: Builder(builder: (context) {
+          return IconButton(
+              onPressed: () {
+                context.read<OrderBloc>().add(OrderRemoveRequest(item: item));
+              },
+              icon: Icon(Icons.remove));
+        }));
   }
 }

@@ -18,5 +18,11 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         emit(OrderAdded(orders: prev));
       }
     });
+
+    on<OrderRemoveRequest>((event, emit) {
+      List<OrderItem> prev = state.orders;
+      prev.remove(event.item);
+      emit(OrderRemoved(orders: prev));
+    });
   }
 }

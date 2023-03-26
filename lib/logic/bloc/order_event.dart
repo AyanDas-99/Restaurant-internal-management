@@ -15,7 +15,7 @@ class OrderAddRequest extends OrderEvent {
 }
 
 class OrderRemoveRequest extends OrderEvent {
-  final MenuItem item;
+  final OrderItem item;
 
   OrderRemoveRequest({required this.item});
 }
