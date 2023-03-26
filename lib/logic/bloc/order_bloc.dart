@@ -10,7 +10,13 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   OrderBloc() : super(Orders(orders: [])) {
     on<OrderAddRequest>((event, emit) {
       List<OrderItem> prev = state.orders;
-      prev.add(OrderItem(event.item, event.quantity));
+      OrderItem newItem = OrderItem(event.item, event.quantity);
+      if (prev.contains(newItem)) {
+        emit(OrderAdded(orders: prev));
+      } else {
+        prev.add(OrderItem(event.item, event.quantity));
+        emit(OrderAdded(orders: prev));
+      }
     });
   }
 }

@@ -36,6 +36,7 @@ class Order_drawer extends StatelessWidget {
 
   Widget OrderListItem(OrderItem item) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         CircleAvatar(
           backgroundImage: NetworkImage(item.item.image),
