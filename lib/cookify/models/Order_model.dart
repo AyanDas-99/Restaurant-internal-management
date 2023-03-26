@@ -11,7 +11,7 @@ class OrderItem {
   bool operator ==(covariant OrderItem other) {
     if (identical(this, other)) return true;
 
-    return other.item == item;
+    return other.item == item && other.quantity == quantity;
   }
 
   @override

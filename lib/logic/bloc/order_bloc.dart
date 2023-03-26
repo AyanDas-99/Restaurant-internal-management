@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:restaurant_management/cookify/models/Order_model.dart';
 import 'package:restaurant_management/cookify/models/menu_model.dart';
 
@@ -12,17 +13,16 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       List<OrderItem> prev = state.orders;
       OrderItem newItem = OrderItem(event.item, event.quantity);
       if (prev.contains(newItem)) {
-        emit(OrderAdded(orders: prev));
+        emit(Orders(orders: prev));
       } else {
-        prev.add(OrderItem(event.item, event.quantity));
-        emit(OrderAdded(orders: prev));
+        emit(Orders(
+            orders: [...state.orders, OrderItem(event.item, event.quantity)]));
       }
     });
 
     on<OrderRemoveRequest>((event, emit) {
-      List<OrderItem> prev = state.orders;
-      prev.remove(event.item);
-      emit(OrderRemoved(orders: prev));
+      List<OrderItem> prev = List.from(state.orders)..remove(event.item);
+      emit(Orders(orders: prev));
     });
   }
 }

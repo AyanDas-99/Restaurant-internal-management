@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurant_management/flutx/lib/widgets/svg/svg.dart';
 import 'package:restaurant_management/logic/bloc/order_bloc.dart';
 
 import '../models/Order_model.dart';
@@ -13,10 +14,32 @@ class Order_drawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: Colors.white,
-      child: BlocBuilder<OrderBloc, OrderState>(
+      child: BlocConsumer<OrderBloc, OrderState>(
+        listener: (context, state) {
+          print(state);
+        },
         builder: (context, state) {
           if (state.orders.isEmpty) {
-            return Text("Empty");
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FxSvg(
+                  'assets/images/undraw_breakfast_psiw.svg',
+                  size: 100,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Your plate is empty\n\nAdd something for order",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 20,
+                      color: Colors.grey),
+                  textAlign: TextAlign.center,
+                )
+              ],
+            );
           }
           return Column(
             children: _buildOrderList(state.orders),
