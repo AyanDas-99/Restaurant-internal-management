@@ -43,8 +43,10 @@ class FAuth {
       final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
           idToken: googleSignInAuthentication.idToken);
-      await firebaseAuth.signInWithCredential(credential);
-      await _firestoreUser.addGoogleUserToDb(googleSignInAccount);
+      var user = await firebaseAuth.signInWithCredential(credential);
+      if (user.additionalUserInfo!.isNewUser) {
+        await _firestoreUser.addGoogleUserToDb(googleSignInAccount);
+      }
     } catch (e) {
       throw e;
     }

@@ -72,12 +72,11 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
                           image: NetworkImage(user?.photoURL ?? ""),
                           height: 100,
                           width: 100,
-                          placeholder: NetworkImage(
-                            "https://firebasestorage.googleapis.com/v0/b/restaurant-management-b24e2.appspot.com/o/profile_placeholder.jpeg?alt=media&token=4f155c3d-81e5-4490-aeb8-334a6f22d101",
-                          ),
+                          placeholder: AssetImage(
+                              "assets/images/profile_placeholder.jpeg"),
                           imageErrorBuilder: (context, error, stackTrace) =>
-                              Image.network(
-                            "https://firebasestorage.googleapis.com/v0/b/restaurant-management-b24e2.appspot.com/o/profile_placeholder.jpeg?alt=media&token=4f155c3d-81e5-4490-aeb8-334a6f22d101",
+                              Image.asset(
+                            '/assets/images/profile_placeholder.jpeg',
                             height: 100,
                             width: 100,
                           ),
@@ -124,6 +123,7 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
                         letterSpacing: 0,
                       ),
                     ),
+                    FxSpacing.height(16),
                     BlocConsumer<MenuBloc, MenuState>(
                       bloc: _menuBloc,
                       listener: (context, state) {
@@ -136,7 +136,7 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
                         if (state is MenuLoaded) {
                           return favoriteGrid(state.menu);
                         }
-                        if (state is MenuLoading) {
+                        if (state is MenuLoading || state is MenuInitial) {
                           return Center(
                             child: CircularProgressIndicator(),
                           );
@@ -207,23 +207,36 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
     List<Widget> list = [];
 
     for (MenuItem item in favoriteMenu.menuItems) {
-      list.add(Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(item.image),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: Text(
-              item.item_name,
-              style: TextStyle(),
+      list.add(Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(item.image),
             ),
-          ),
-          ElevatedButton(onPressed: () {}, child: Icon(Icons.cancel))
-        ],
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Text(
+                item.item_name,
+                style: TextStyle(),
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                _userLikeBloc
+                    .add(RemoveItemLike(item.item_name, user?.email ?? ""));
+              },
+              icon: Icon(Icons.cancel),
+              color: customTheme.cookifyPrimary,
+            ),
+          ],
+        ),
+      ));
+      list.add(SizedBox(
+        height: 20,
       ));
     }
     return list;

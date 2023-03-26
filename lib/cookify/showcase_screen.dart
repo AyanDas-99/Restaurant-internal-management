@@ -267,9 +267,13 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(8)),
-            child: Image(
-              image: NetworkImage(showcase.image),
+            child: FadeInImage.assetNetwork(
+              placeholder: 'assets/images/food_placeholder.jpeg',
+              image: showcase.image,
+              imageErrorBuilder: (context, error, stackTrace) =>
+                  Image.asset('assets/images/food_placeholder.jpeg'),
             ),
+            // child: Image.network(showcase.image),
           ),
           FxSpacing.height(8),
           FxText.bodyLarge(showcase.item_name.capitalize,
