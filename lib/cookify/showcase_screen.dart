@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurant_management/cookify/widgets/order_drawer.dart';
 import 'package:restaurant_management/data/provider/menu_provider.dart';
 import 'package:restaurant_management/data/provider/user_provider.dart';
 import 'package:restaurant_management/data/repositories/menu_repository.dart';
@@ -116,6 +117,20 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
               .copyWith(secondary: customTheme.cookifyPrimary.withAlpha(40))),
       child: SafeArea(
         child: Scaffold(
+          endDrawer: Order_drawer(),
+          appBar: AppBar(
+            actions: [
+              Builder(builder: (context) {
+                return IconButton(
+                    onPressed: () => Scaffold.of(context).openEndDrawer(),
+                    icon: Icon(
+                      FxBoxIcons.bx_dish,
+                      color: Colors.deepOrange,
+                    ));
+              })
+            ],
+            elevation: 0.0,
+          ),
           body: Container(
             padding: FxSpacing.top(10),
             child: SingleChildScrollView(
