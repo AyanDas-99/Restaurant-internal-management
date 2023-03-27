@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:restaurant_management/flutx/lib/widgets/svg/svg.dart';
 import 'package:restaurant_management/logic/bloc/order_bloc.dart';
+import 'package:restaurant_management/theme/app_theme.dart';
 
 import '../models/Order_model.dart';
 
@@ -31,18 +34,59 @@ class Order_drawer extends StatelessWidget {
                   height: 20,
                 ),
                 Text(
-                  "Your plate is empty\n\nAdd something for order",
+                  "Your plate is empty\nAdd something for order",
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
-                      fontSize: 20,
+                      fontSize: 15,
                       color: Colors.grey),
                   textAlign: TextAlign.center,
                 )
               ],
             );
           }
-          return Column(
-            children: _buildOrderList(state.orders),
+          return SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                children: [
+                  Text(
+                    "Your list",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ..._buildOrderList(state.orders),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          elevation: MaterialStatePropertyAll(0),
+                          padding: MaterialStatePropertyAll(EdgeInsets.all(10)),
+                          backgroundColor: MaterialStatePropertyAll(
+                              Color.fromARGB(31, 64, 255, 80))),
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FaIcon(
+                            FontAwesomeIcons.bowlFood,
+                            color: CustomTheme.green,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Order",
+                            style: TextStyle(color: CustomTheme.green),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           );
         },
       ),
@@ -53,29 +97,56 @@ class Order_drawer extends StatelessWidget {
     List<Widget> orderItems = [];
     for (OrderItem item in list) {
       orderItems.add(OrderListItem(item));
+      orderItems.add(Divider());
     }
     return orderItems;
   }
 
   Widget OrderListItem(OrderItem item) {
     return ListTile(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(item.item.image),
+        leading: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(5)),
+          child: Image.network(
+            item.item.image,
+            height: 40,
+          ),
         ),
-        title: Text(item.item.item_name),
-        subtitle: Text("Quantity: ${item.quantity.toString()}"),
+        title: Text(
+          item.item.item_name,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Row(
+          children: [
+            Text(
+              "Quantity:",
+              style: TextStyle(fontSize: 10),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.red, borderRadius: BorderRadius.circular(10)),
+              margin: EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5.0),
+              child: Text(
+                item.quantity.toString(),
+              ),
+            )
+          ],
+        ),
         trailing: Builder(builder: (context) {
           return ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                elevation: 0,
+                backgroundColor: Color.fromARGB(35, 244, 67, 54),
                 minimumSize: Size.zero,
                 padding: EdgeInsets.zero,
-                elevation: 0.0,
               ),
               onPressed: () {
                 context.read<OrderBloc>().add(OrderRemoveRequest(item: item));
               },
-              child: Icon(Icons.remove));
+              child: Icon(
+                Icons.remove,
+                color: Colors.black,
+              ));
         }));
   }
 }
