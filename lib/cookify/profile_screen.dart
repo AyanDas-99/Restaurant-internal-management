@@ -93,16 +93,6 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
                             FxText.bodyMedium(
                               user?.email ?? "",
                             ),
-                            FxSpacing.height(8),
-                            FxButton.outlined(
-                                onPressed: () {},
-                                splashColor:
-                                    customTheme.cookifyPrimary.withAlpha(40),
-                                borderColor: customTheme.cookifyPrimary,
-                                padding: FxSpacing.xy(16, 4),
-                                borderRadiusAll: 32,
-                                child: FxText.bodySmall("Edit profile",
-                                    color: customTheme.cookifyPrimary))
                           ],
                         ),
                       ),
@@ -112,7 +102,6 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
                 FxSpacing.height(24),
                 FxContainer(
                     child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ListTile(
                       dense: true,
@@ -134,6 +123,25 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
                       },
                       builder: (context, state) {
                         if (state is MenuLoaded) {
+                          if (state.menu.menuItems.length == 0) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                FxSvg(
+                                  'assets/images/undraw_love_it_3km3.svg',
+                                  size: 60,
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  "Nothing added to favorite",
+                                  style: TextStyle(color: Colors.grey),
+                                )
+                              ],
+                            );
+                          }
                           return favoriteGrid(state.menu);
                         }
                         if (state is MenuLoading || state is MenuInitial) {
