@@ -142,6 +142,18 @@ class Order_drawer extends StatelessWidget {
               ),
               onPressed: () {
                 context.read<OrderBloc>().add(OrderRemoveRequest(item: item));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Color.fromARGB(255, 255, 178, 178),
+                    elevation: 0.0,
+                    content: Text(
+                      "Remove from list",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    duration: Duration(milliseconds: 2000),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    )));
               },
               child: Icon(
                 Icons.remove,

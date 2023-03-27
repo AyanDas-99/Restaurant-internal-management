@@ -574,6 +574,18 @@ class _SimpleDialogState extends State<_SimpleDialog> {
                   onPressed: () {
                     context.read<OrderBloc>().add(OrderAddRequest(
                         item: widget.item, quantity: widget.quantity));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        backgroundColor: Color.fromARGB(255, 178, 255, 181),
+                        elevation: 0.0,
+                        content: Text(
+                          "Added to list",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        duration: Duration(milliseconds: 2000),
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        )));
                     context.pop();
                   },
                   child: Text("Ok"),
