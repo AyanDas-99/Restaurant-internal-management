@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:restaurant_management/logic/repositories/firebase_auth.dart';
+import 'package:restaurant_management/data/provider/firebase_auth.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -14,7 +14,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       try {
         await fAuth.registerWithEmail(
-            email: event.email, password: event.password);
+            email: event.email, password: event.password, name: event.name);
         emit(AuthAuthenticated());
       } catch (e) {
         emit(AuthError(e.toString()));
@@ -34,7 +34,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     //Sign out request
-
     on<SignOutRequested>((event, emit) async {
       emit(AuthLoading());
       try {
@@ -51,6 +50,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await fAuth.forgotPassword(email: event.email);
         emit(PassResetEmailSent());
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+
+    // GoogleSignIn request
+    on<GoogleSignInRequested>((event, emit) async {
+      emit(GoogleLoginLoading());
+      try {
+        await fAuth.googleLogIn();
+        emit(AuthAuthenticated());
       } catch (e) {
         emit(AuthError(e.toString()));
       }

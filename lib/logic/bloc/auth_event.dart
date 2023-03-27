@@ -6,8 +6,9 @@ abstract class AuthEvent {}
 class RegisterRequested implements AuthEvent {
   final String email;
   final String password;
+  final String name;
 
-  RegisterRequested(this.email, this.password);
+  RegisterRequested(this.email, this.password, this.name);
 }
 
 class LoginRequested implements AuthEvent {
@@ -24,3 +25,5 @@ class PasswordResetRequested implements AuthEvent {
 
   PasswordResetRequested(this.email);
 }
+
+class GoogleSignInRequested implements AuthEvent {}

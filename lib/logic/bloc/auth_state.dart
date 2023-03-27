@@ -20,3 +20,5 @@ class AuthError extends AuthState {
 }
 
 class PassResetEmailSent extends AuthState {}
+
+class GoogleLoginLoading extends AuthState {}

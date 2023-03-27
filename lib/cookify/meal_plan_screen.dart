@@ -197,8 +197,8 @@ class _CookifyMealPlanScreenState extends State<CookifyMealPlanScreen> {
       child: FxContainer.none(
         splashColor: customTheme.cookifyPrimary.withAlpha(40),
         onTap: () {
-          Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(builder: (context) => CookifyRecipeScreen()));
+          // Navigator.of(context, rootNavigator: true).push(
+          //     MaterialPageRoute(builder: (context) => CookifyRecipeScreen()));
         },
         color: Colors.transparent,
         margin: FxSpacing.bottom(16),
