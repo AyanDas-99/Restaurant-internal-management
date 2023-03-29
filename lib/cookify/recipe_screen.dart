@@ -24,6 +24,7 @@ class _MenuItemDetailScreenState extends State<MenuItemDetailScreen> {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
+    print(widget.menuItem);
   }
 
   @override

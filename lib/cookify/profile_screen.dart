@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_management/cookify/models/menu_model.dart';
+import 'package:restaurant_management/flutx/lib/extensions/string_extension.dart';
 import 'package:restaurant_management/logic/bloc/auth_bloc.dart';
 import 'package:restaurant_management/logic/bloc/menu_bloc.dart';
 import 'package:restaurant_management/logic/bloc/user_like_bloc.dart';
@@ -13,6 +16,7 @@ import 'package:flutx/flutx.dart';
 
 import '../data/provider/menu_provider.dart';
 import '../data/repositories/menu_repository.dart';
+import '../logic/bloc/order_bloc.dart';
 
 class CookifyProfileScreen extends StatefulWidget {
   @override
@@ -32,8 +36,6 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
 
   late CustomTheme customTheme;
   late ThemeData theme;
-
-  bool notification = true, offlineReading = false;
 
   @override
   void initState() {
@@ -215,38 +217,227 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
     List<Widget> list = [];
 
     for (MenuItem item in favoriteMenu.menuItems) {
-      list.add(Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundImage: NetworkImage(item.image),
+      list.add(Builder(builder: (context) {
+        return InkWell(
+          onTap: () => _showSheet(item, context),
+          child: Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: NetworkImage(item.image),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Text(
+                    item.item_name,
+                    style: TextStyle(),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    _userLikeBloc
+                        .add(RemoveItemLike(item.item_name, user?.email ?? ""));
+                  },
+                  icon: Icon(Icons.cancel),
+                  color: customTheme.cookifyPrimary,
+                ),
+              ],
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Text(
-                item.item_name,
-                style: TextStyle(),
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                _userLikeBloc
-                    .add(RemoveItemLike(item.item_name, user?.email ?? ""));
-              },
-              icon: Icon(Icons.cancel),
-              color: customTheme.cookifyPrimary,
-            ),
-          ],
-        ),
-      ));
+          ),
+        );
+      }));
       list.add(SizedBox(
         height: 20,
       ));
     }
     return list;
+  }
+
+  // Dialog to select "know more" or "add to order"
+  _showSheet(MenuItem item, BuildContext pageContext) {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (context) => Container(
+              color: customTheme.cookifyOnPrimary,
+              child: CupertinoActionSheet(
+                title: FxText.titleLarge(item.item_name.capitalize,
+                    fontWeight: 700, letterSpacing: 0.5),
+                message: FxText.titleSmall("Select any action",
+                    fontWeight: 500, letterSpacing: 0.2),
+                actions: <Widget>[
+                  CupertinoActionSheetAction(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(FontAwesomeIcons.cartPlus),
+                        FxSpacing.width(20),
+                        FxText.bodyLarge(
+                          "Add to order",
+                          fontWeight: 600,
+                        )
+                      ],
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _showDialog(item);
+                    },
+                  ),
+                  CupertinoActionSheetAction(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(FontAwesomeIcons.info),
+                        FxSpacing.width(20),
+                        FxText.bodyLarge(
+                          "Know more",
+                          fontWeight: 600,
+                        )
+                      ],
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      GoRouter.of(pageContext)
+                          .pushNamed(RouterConstants.recipeScreen, extra: item);
+                    },
+                  )
+                ],
+                cancelButton: Container(
+                  color: Color.fromARGB(255, 255, 169, 169),
+                  child: CupertinoActionSheetAction(
+                    child: FxText.titleMedium("Cancel", fontWeight: 600),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
+            ));
+  }
+
+  void _showDialog(MenuItem item) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => _SimpleDialog(
+              item: item,
+            ));
+  }
+}
+
+class _SimpleDialog extends StatefulWidget {
+  int quantity = 1;
+  final MenuItem item;
+
+  _SimpleDialog({super.key, required this.item});
+
+  @override
+  State<_SimpleDialog> createState() => _SimpleDialogState();
+}
+
+class _SimpleDialogState extends State<_SimpleDialog> {
+  @override
+  Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+    return Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8.0))),
+      child: Container(
+        padding: FxSpacing.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10.0,
+              offset: Offset(0.0, 10.0),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            FxText.titleLarge(
+              "Set quantity",
+              fontWeight: 700,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      if (widget.quantity == 0) return null;
+                      setState(() {
+                        widget.quantity--;
+                      });
+                    },
+                    icon: Icon(Icons.remove)),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(widget.quantity.toString()),
+                SizedBox(
+                  width: 10,
+                ),
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        widget.quantity++;
+                      });
+                    },
+                    icon: Icon(Icons.add)),
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  child: Text("Cancel"),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll(Colors.redAccent)),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<OrderBloc>().add(OrderAddRequest(
+                        item: widget.item, quantity: widget.quantity));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        backgroundColor: Color.fromARGB(255, 178, 255, 181),
+                        elevation: 0.0,
+                        content: Text(
+                          "Added to list",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        duration: Duration(milliseconds: 2000),
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        )));
+                    context.pop();
+                  },
+                  child: Text("Ok"),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(Colors.green)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
