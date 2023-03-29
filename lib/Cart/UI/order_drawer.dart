@@ -8,7 +8,7 @@ import 'package:restaurant_management/flutx/lib/widgets/svg/svg.dart';
 import 'package:restaurant_management/Cart/logic/bloc/order_bloc.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 
-import '../models/Order_model.dart';
+import '../../cookify/models/Order_model.dart';
 
 class Order_drawer extends StatelessWidget {
   const Order_drawer({super.key});
