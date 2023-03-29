@@ -5,7 +5,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:restaurant_management/flutx/lib/widgets/svg/svg.dart';
-import 'package:restaurant_management/logic/bloc/order_bloc.dart';
+import 'package:restaurant_management/Cart/logic/bloc/order_bloc.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 
 import '../models/Order_model.dart';

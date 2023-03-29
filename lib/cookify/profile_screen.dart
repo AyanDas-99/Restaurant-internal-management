@@ -14,9 +14,9 @@ import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
 
+import '../Cart/logic/bloc/order_bloc.dart';
 import '../data/provider/menu_provider.dart';
 import '../data/repositories/menu_repository.dart';
-import '../logic/bloc/order_bloc.dart';
 
 class CookifyProfileScreen extends StatefulWidget {
   @override

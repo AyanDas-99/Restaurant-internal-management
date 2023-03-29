@@ -11,7 +11,7 @@ import 'package:restaurant_management/data/provider/user_provider.dart';
 import 'package:restaurant_management/data/repositories/menu_repository.dart';
 import 'package:restaurant_management/flutx/lib/extensions/string_extension.dart';
 import 'package:restaurant_management/logic/bloc/menu_bloc.dart';
-import 'package:restaurant_management/logic/bloc/order_bloc.dart';
+import 'package:restaurant_management/Cart/logic/bloc/order_bloc.dart';
 import 'package:restaurant_management/logic/bloc/user_like_bloc.dart';
 import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
