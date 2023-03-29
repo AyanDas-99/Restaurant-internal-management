@@ -1,4 +1,4 @@
-import '../../cookify/models/menu_model.dart';
+import '../../../cookify/models/menu_model.dart';
 
 class MenuRepository {
   Future<Menu> getFullMenu(Function request) async {

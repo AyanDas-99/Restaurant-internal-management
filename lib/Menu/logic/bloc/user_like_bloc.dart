@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:restaurant_management/data/provider/user_provider.dart';
+
+import '../../data/providers/user_provider.dart';
 
 part 'user_like_event.dart';
 part 'user_like_state.dart';

@@ -4,8 +4,6 @@ import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
 
-import 'models/full_recipe.dart';
-
 class MenuItemDetailScreen extends StatefulWidget {
   final MenuItem menuItem;
 

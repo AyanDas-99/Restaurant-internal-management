@@ -1,10 +1,10 @@
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutx/flutx.dart';
-import 'home_screen.dart';
 import 'meal_plan_screen.dart';
+import 'package:flutter/material.dart';
+
 import 'profile_screen.dart';
 import 'showcase_screen.dart';
-import 'package:flutter/material.dart';
 
 class CookifyFullApp extends StatefulWidget {
   @override

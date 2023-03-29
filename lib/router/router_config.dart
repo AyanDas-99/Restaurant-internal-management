@@ -1,17 +1,14 @@
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:restaurant_management/cookify/forgot_password_screen.dart';
-import 'package:restaurant_management/cookify/full_app.dart';
-import 'package:restaurant_management/cookify/login_screen.dart';
 import 'package:restaurant_management/cookify/models/menu_model.dart';
-import 'package:restaurant_management/cookify/recipe_screen.dart';
-import 'package:restaurant_management/cookify/register_screen.dart';
-import 'package:restaurant_management/cookify/splash_screen.dart';
-import 'package:restaurant_management/data/provider/firebase_auth.dart';
 import 'package:restaurant_management/router/router_constants.dart';
+
+import '../Menu/UI/full_app.dart';
+import '../Menu/UI/recipe_screen.dart';
+import '../Signup/UI/forgot_password_screen.dart';
+import '../Signup/UI/login_screen.dart';
+import '../Signup/UI/register_screen.dart';
+import '../Signup/UI/splash_screen.dart';
 
 class AppRouter {
   GoRouter router = GoRouter(

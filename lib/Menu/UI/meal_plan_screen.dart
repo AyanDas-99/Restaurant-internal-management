@@ -1,10 +1,8 @@
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutx/flutx.dart';
-import 'models/date_time.dart';
-import 'models/meal_plan.dart';
 import 'package:flutter/material.dart';
 
-import 'recipe_screen.dart';
+import '../../cookify/models/meal_plan.dart';
 
 class CookifyMealPlanScreen extends StatefulWidget {
   @override
@@ -21,7 +19,7 @@ class _CookifyMealPlanScreenState extends State<CookifyMealPlanScreen> {
   @override
   void initState() {
     super.initState();
-    _listDateTime = DateTime.getList();
+    // _listDateTime = DateTime.getList();
     _listMealPlan = MealPlan.getList();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
@@ -168,15 +166,15 @@ class _CookifyMealPlanScreenState extends State<CookifyMealPlanScreen> {
       color: active ? customTheme.cookifyPrimary : Colors.transparent,
       child: Column(
         children: [
-          FxText.bodySmall(dateTime.date,
-              color: active
-                  ? customTheme.cookifyOnPrimary
-                  : theme.colorScheme.onBackground),
+          // FxText.bodySmall(dateTime.date,
+          //     color: active
+          //         ? customTheme.cookifyOnPrimary
+          //         : theme.colorScheme.onBackground),
           FxSpacing.height(8),
-          FxText.bodySmall(dateTime.day,
-              color: active
-                  ? customTheme.cookifyOnPrimary
-                  : theme.colorScheme.onBackground),
+          // FxText.bodySmall(dateTime.day,
+          //     color: active
+          //         ? customTheme.cookifyOnPrimary
+          //         : theme.colorScheme.onBackground),
         ],
       ),
     );

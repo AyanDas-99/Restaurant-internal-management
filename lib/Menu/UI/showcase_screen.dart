@@ -6,20 +6,20 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_management/Cart/UI/order_drawer.dart';
-import 'package:restaurant_management/data/provider/menu_provider.dart';
-import 'package:restaurant_management/data/provider/user_provider.dart';
-import 'package:restaurant_management/data/repositories/menu_repository.dart';
 import 'package:restaurant_management/flutx/lib/extensions/string_extension.dart';
-import 'package:restaurant_management/logic/bloc/menu_bloc.dart';
 import 'package:restaurant_management/Cart/logic/bloc/order_bloc.dart';
-import 'package:restaurant_management/logic/bloc/user_like_bloc.dart';
 import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
-import 'models/menu_model.dart';
-import 'models/category.dart';
-import 'models/showcase.dart';
+import '../../cookify/models/menu_model.dart';
+import '../data/providers/menu_provider.dart';
+import '../data/providers/user_provider.dart';
+import '../data/repositories/menu_repository.dart';
+import '../logic/bloc/menu_bloc.dart';
+import '../logic/bloc/user_like_bloc.dart';
+
+import 'package:restaurant_management/cookify/models/category.dart';
 
 class CookifyShowcaseScreen extends StatefulWidget {
   @override
@@ -38,7 +38,6 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
   // focus node for search bar
   final FocusNode _focusNode = FocusNode();
 
-  late List<Showcase> showcases;
   late List<Category> categories;
   late CustomTheme customTheme;
   late ThemeData theme;
@@ -55,7 +54,6 @@ class _CookifyShowcaseScreenState extends State<CookifyShowcaseScreen> {
         MenuBloc(menuRepository: menuRepository, firestoreMenu: firestoreMenu)
           ..add(FullMenuRequested());
     _likeBloc = UserLikeBloc()..add(GetLikes(user?.email ?? ""));
-    showcases = Showcase.getList();
     categories = Category.getList();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;

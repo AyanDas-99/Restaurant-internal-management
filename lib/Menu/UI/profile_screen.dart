@@ -6,16 +6,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurant_management/cookify/models/menu_model.dart';
 import 'package:restaurant_management/flutx/lib/extensions/string_extension.dart';
-import 'package:restaurant_management/logic/bloc/auth_bloc.dart';
-import 'package:restaurant_management/logic/bloc/menu_bloc.dart';
-import 'package:restaurant_management/logic/bloc/user_like_bloc.dart';
+import 'package:restaurant_management/Signup/logic/bloc/auth_bloc.dart';
+import 'package:restaurant_management/Menu/logic/bloc/menu_bloc.dart';
+import 'package:restaurant_management/Menu/logic/bloc/user_like_bloc.dart';
 import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
 
-import '../Cart/logic/bloc/order_bloc.dart';
-import '../data/provider/menu_provider.dart';
+import '../../Cart/logic/bloc/order_bloc.dart';
+import '../../Menu/data/providers/menu_provider.dart';
 import '../data/repositories/menu_repository.dart';
 
 class CookifyProfileScreen extends StatefulWidget {

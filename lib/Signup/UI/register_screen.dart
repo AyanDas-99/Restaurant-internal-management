@@ -1,18 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:restaurant_management/logic/bloc/auth_bloc.dart';
+import 'package:restaurant_management/Signup/logic/bloc/auth_bloc.dart';
 import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
 
-class CookifyLoginScreen extends StatefulWidget {
+class CookifyRegisterScreen extends StatefulWidget {
   @override
-  _CookifyLoginScreenState createState() => _CookifyLoginScreenState();
+  _CookifyRegisterScreenState createState() => _CookifyRegisterScreenState();
 }
 
-class _CookifyLoginScreenState extends State<CookifyLoginScreen> {
-  // text controllers
+class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
+// text controllers
+  TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -42,11 +43,42 @@ class _CookifyLoginScreenState extends State<CookifyLoginScreen> {
               size: 64,
             ),
             FxSpacing.height(16),
-            Center(
-              child: FxText.headlineSmall("Log In",
-                  color: customTheme.cookifyPrimary, fontWeight: 800),
+            FxText.displaySmall(
+              "Create an Account",
+              color: customTheme.cookifyPrimary,
+              fontWeight: 800,
+              textAlign: TextAlign.center,
             ),
             FxSpacing.height(32),
+            // FxTextField(
+            //   floatingLabelBehavior: FloatingLabelBehavior.never,
+            //   autoFocusedBorder: true,
+            //   textFieldStyle: FxTextFieldStyle.outlined,
+            //   textFieldType: FxTextFieldType.name,
+            //   filled: true,
+            //   fillColor: customTheme.cookifyPrimary.withAlpha(40),
+            //   enabledBorderColor: customTheme.cookifyPrimary,
+            //   focusedBorderColor: customTheme.cookifyPrimary,
+            //   prefixIconColor: customTheme.cookifyPrimary,
+            //   labelTextColor: customTheme.cookifyPrimary,
+            //   cursorColor: customTheme.cookifyPrimary,
+            // ),
+            // FxSpacing.height(24),
+            FxTextField(
+              controller: nameController,
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              autoFocusedBorder: true,
+              textFieldStyle: FxTextFieldStyle.outlined,
+              textFieldType: FxTextFieldType.name,
+              filled: true,
+              fillColor: customTheme.cookifyPrimary.withAlpha(40),
+              enabledBorderColor: customTheme.cookifyPrimary,
+              focusedBorderColor: customTheme.cookifyPrimary,
+              prefixIconColor: customTheme.cookifyPrimary,
+              labelTextColor: customTheme.cookifyPrimary,
+              cursorColor: customTheme.cookifyPrimary,
+            ),
+            FxSpacing.height(24),
             FxTextField(
               controller: emailController,
               floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -80,53 +112,47 @@ class _CookifyLoginScreenState extends State<CookifyLoginScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: FxButton.text(
+                  padding: FxSpacing.zero,
                   onPressed: () {
-                    // Navigator.of(context, rootNavigator: true).push(
-                    //   MaterialPageRoute(
-                    //       builder: (context) => CookifyForgotPasswordScreen()),
-                    // );
                     GoRouter.of(context)
                         .pushNamed(RouterConstants.forgotPasswordScreen);
                   },
-                  padding: FxSpacing.zero,
                   splashColor: customTheme.cookifyPrimary.withAlpha(40),
-                  child: FxText.labelMedium("Forgot Password?",
+                  child: FxText.bodySmall("Forgot Password?",
                       color: customTheme.cookifyPrimary)),
             ),
             FxSpacing.height(16),
             BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
+                if (state is AuthError) {
+                  showSnackBar(state.error);
+                }
                 if (state is AuthAuthenticated) {
                   GoRouter.of(context)
                       .pushReplacementNamed(RouterConstants.homeScreen);
                 }
-                if (state is AuthError) {
-                  showSnackBar(state.error);
-                }
               },
               builder: (context, state) {
                 if (state is AuthLoading) {
-                  return FxButton.block(
-                    onPressed: null,
-                    child: CircularProgressIndicator(),
-                    backgroundColor: customTheme.cookifyPrimary,
-                  );
+                  return Center(child: CircularProgressIndicator());
                 }
-
                 return FxButton.block(
                     borderRadiusAll: 8,
                     onPressed: () {
                       if (emailController.text == "" ||
-                          passwordController.text == "") {
-                        showSnackBar("All fields required");
+                          passwordController.text == "" ||
+                          nameController.text == "") {
+                        showSnackBar("All fields are required");
                       } else {
-                        context.read<AuthBloc>().add(LoginRequested(
-                            emailController.text, passwordController.text));
+                        context.read<AuthBloc>().add(RegisterRequested(
+                            emailController.text,
+                            passwordController.text,
+                            nameController.text));
                       }
                     },
                     backgroundColor: customTheme.cookifyPrimary,
                     child: FxText.labelLarge(
-                      "Log In",
+                      "Create an Account",
                       color: customTheme.cookifyOnPrimary,
                     ));
               },
@@ -149,20 +175,17 @@ class _CookifyLoginScreenState extends State<CookifyLoginScreen> {
                     ),
                   ],
                 )),
+
             FxSpacing.height(16),
             FxButton.text(
                 onPressed: () {
-                  // Navigator.of(context, rootNavigator: true).push(
-                  //   MaterialPageRoute(
-                  //       builder: (context) => CookifyRegisterScreen()),
-                  // );
-                  GoRouter.of(context)
-                      .pushNamed(RouterConstants.registerScreen);
+                  GoRouter.of(context).pushNamed(RouterConstants.loginScreen);
                 },
                 splashColor: customTheme.cookifyPrimary.withAlpha(40),
-                child: FxText.labelMedium("I haven\'t an account",
+                child: FxText.labelMedium("I have already an account",
                     decoration: TextDecoration.underline,
-                    color: customTheme.cookifyPrimary))
+                    color: customTheme.cookifyPrimary)),
+            FxSpacing.height(16),
           ],
         ),
       ),

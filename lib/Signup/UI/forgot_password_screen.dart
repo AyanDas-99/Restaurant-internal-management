@@ -1,13 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:restaurant_management/logic/bloc/auth_bloc.dart';
+import 'package:restaurant_management/Signup/logic/bloc/auth_bloc.dart';
 import 'package:restaurant_management/router/router_constants.dart';
 import 'package:restaurant_management/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
-
-import 'full_app.dart';
-import 'register_screen.dart';
 
 class CookifyForgotPasswordScreen extends StatefulWidget {
   @override

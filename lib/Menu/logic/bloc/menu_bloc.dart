@@ -2,9 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:restaurant_management/cookify/models/menu_model.dart';
-import 'package:restaurant_management/data/provider/menu_provider.dart';
-import 'package:restaurant_management/data/repositories/menu_repository.dart';
-import 'package:restaurant_management/logic/bloc/user_like_bloc.dart';
+
+import '../../data/providers/menu_provider.dart';
+import '../../data/repositories/menu_repository.dart';
 
 part 'menu_event.dart';
 part 'menu_state.dart';

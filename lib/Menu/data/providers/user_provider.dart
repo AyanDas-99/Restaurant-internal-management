@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:restaurant_management/data/provider/menu_provider.dart';
+
+import 'menu_provider.dart';
 
 class FirestoreUser {
   var db = FirebaseFirestore.instance;
