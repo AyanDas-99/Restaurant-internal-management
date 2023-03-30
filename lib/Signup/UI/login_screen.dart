@@ -150,19 +150,28 @@ class _CookifyLoginScreenState extends State<CookifyLoginScreen> {
                   ],
                 )),
             FxSpacing.height(16),
-            FxButton.text(
-                onPressed: () {
-                  // Navigator.of(context, rootNavigator: true).push(
-                  //   MaterialPageRoute(
-                  //       builder: (context) => CookifyRegisterScreen()),
-                  // );
-                  GoRouter.of(context)
-                      .pushNamed(RouterConstants.registerScreen);
-                },
-                splashColor: customTheme.cookifyPrimary.withAlpha(40),
-                child: FxText.labelMedium("I haven\'t an account",
-                    decoration: TextDecoration.underline,
-                    color: customTheme.cookifyPrimary))
+            Column(
+              children: [
+                FxButton.text(
+                    onPressed: () {
+                      GoRouter.of(context)
+                          .pushNamed(RouterConstants.registerScreen);
+                    },
+                    splashColor: customTheme.cookifyPrimary.withAlpha(40),
+                    child: FxText.labelMedium("I don't have an account",
+                        decoration: TextDecoration.underline,
+                        color: customTheme.cookifyPrimary)),
+                FxButton.text(
+                    onPressed: () {
+                      context.goNamed(RouterConstants.homeScreen);
+                    },
+                    splashColor: customTheme.cookifyPrimary.withAlpha(40),
+                    child: FxText.labelMedium("Skip registration >>",
+                        decoration: TextDecoration.underline,
+                        color: customTheme.cookifyPrimary)),
+              ],
+            ),
+            FxSpacing.height(16),
           ],
         ),
       ),

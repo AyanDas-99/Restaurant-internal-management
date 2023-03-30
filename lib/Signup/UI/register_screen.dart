@@ -177,14 +177,28 @@ class _CookifyRegisterScreenState extends State<CookifyRegisterScreen> {
                 )),
 
             FxSpacing.height(16),
-            FxButton.text(
-                onPressed: () {
-                  GoRouter.of(context).pushNamed(RouterConstants.loginScreen);
-                },
-                splashColor: customTheme.cookifyPrimary.withAlpha(40),
-                child: FxText.labelMedium("I have already an account",
-                    decoration: TextDecoration.underline,
-                    color: customTheme.cookifyPrimary)),
+            Column(
+              children: [
+                FxButton.text(
+                    onPressed: () {
+                      GoRouter.of(context)
+                          .pushNamed(RouterConstants.loginScreen);
+                    },
+                    splashColor: customTheme.cookifyPrimary.withAlpha(40),
+                    child: FxText.labelMedium("I have already an account",
+                        decoration: TextDecoration.underline,
+                        color: customTheme.cookifyPrimary)),
+                FxButton.text(
+                    onPressed: () {
+                      GoRouter.of(context)
+                          .pushNamed(RouterConstants.homeScreen);
+                    },
+                    splashColor: customTheme.cookifyPrimary.withAlpha(40),
+                    child: FxText.labelMedium("Skip registration >>",
+                        decoration: TextDecoration.underline,
+                        color: customTheme.cookifyPrimary)),
+              ],
+            ),
             FxSpacing.height(16),
           ],
         ),
