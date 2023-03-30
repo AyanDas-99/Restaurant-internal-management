@@ -11,8 +11,8 @@ class CookifyMealPlanScreen extends StatefulWidget {
 
 class _CookifyMealPlanScreenState extends State<CookifyMealPlanScreen> {
   int _selectedDate = 0;
-  late List<DateTime> _listDateTime;
-  late List<MealPlan> _listMealPlan;
+  // late List<DateTime> _listDateTime;
+  // late List<MealPlan> _listMealPlan;
   late CustomTheme customTheme;
   late ThemeData theme;
 
@@ -20,7 +20,7 @@ class _CookifyMealPlanScreenState extends State<CookifyMealPlanScreen> {
   void initState() {
     super.initState();
     // _listDateTime = DateTime.getList();
-    _listMealPlan = MealPlan.getList();
+    // _listMealPlan = MealPlan.getList();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
   }
@@ -141,15 +141,15 @@ class _CookifyMealPlanScreenState extends State<CookifyMealPlanScreen> {
   List<Widget> buildDateTime() {
     List<Widget> list = [];
 
-    for (int i = 0; i < _listDateTime.length; i++) {
-      list.add(singleDateTime(i));
-    }
+    // for (int i = 0; i < _listDateTime.length; i++) {
+    //   list.add(singleDateTime(i));
+    // }
 
     return list;
   }
 
   Widget singleDateTime(int index) {
-    DateTime dateTime = _listDateTime[index];
+    // DateTime dateTime = _listDateTime[index];
     bool active = _selectedDate == index;
 
     return FxContainer.none(
@@ -183,9 +183,9 @@ class _CookifyMealPlanScreenState extends State<CookifyMealPlanScreen> {
   List<Widget> buildMealPlan() {
     List<Widget> list = [];
 
-    for (MealPlan mealPlan in _listMealPlan) {
-      list.add(singleMealPlan(mealPlan));
-    }
+    // for (MealPlan mealPlan in _listMealPlan) {
+    //   list.add(singleMealPlan(mealPlan));
+    // }
 
     return list;
   }

@@ -45,6 +45,7 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
         MenuBloc(menuRepository: menuRepository, firestoreMenu: firestoreMenu);
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
+    print("The current user is ${user}");
   }
 
   @override
@@ -78,7 +79,7 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
                               "assets/images/profile_placeholder.jpeg"),
                           imageErrorBuilder: (context, error, stackTrace) =>
                               Image.asset(
-                            '/assets/images/profile_placeholder.jpeg',
+                            'assets/images/profile_placeholder.jpeg',
                             height: 100,
                             width: 100,
                           ),
