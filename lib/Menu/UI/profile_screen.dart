@@ -66,123 +66,173 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
             body: ListView(
               padding: FxSpacing.fromLTRB(24, 36, 24, 24),
               children: [
-                FxContainer(
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: FadeInImage(
-                          image: NetworkImage(user?.photoURL ?? ""),
-                          height: 100,
-                          width: 100,
-                          placeholder: AssetImage(
-                              "assets/images/profile_placeholder.jpeg"),
-                          imageErrorBuilder: (context, error, stackTrace) =>
-                              Image.asset(
-                            'assets/images/profile_placeholder.jpeg',
+                if (user != null) ...[
+                  FxContainer(
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: FadeInImage(
+                            image: NetworkImage(user?.photoURL ?? ""),
                             height: 100,
                             width: 100,
+                            placeholder: AssetImage(
+                                "assets/images/profile_placeholder.jpeg"),
+                            imageErrorBuilder: (context, error, stackTrace) =>
+                                Image.asset(
+                              'assets/images/profile_placeholder.jpeg',
+                              height: 100,
+                              width: 100,
+                            ),
                           ),
                         ),
-                      ),
-                      FxSpacing.width(16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            FxText.bodyLarge(user?.displayName ?? "",
-                                fontWeight: 700),
-                            FxSpacing.width(8),
-                            FxText.bodyMedium(
-                              user?.email ?? "",
-                            ),
-                          ],
+                        FxSpacing.width(16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FxText.bodyLarge(user?.displayName ?? "",
+                                  fontWeight: 700),
+                              FxSpacing.width(8),
+                              FxText.bodyMedium(
+                                user?.email ?? "",
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  FxSpacing.height(24),
+                  FxContainer(
+                      child: Column(
+                    children: [
+                      ListTile(
+                        dense: true,
+                        contentPadding: FxSpacing.zero,
+                        visualDensity: VisualDensity.compact,
+                        title: FxText.bodyLarge(
+                          "Favorite Recipes",
+                          letterSpacing: 0,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                FxSpacing.height(24),
-                FxContainer(
-                    child: Column(
-                  children: [
-                    ListTile(
-                      dense: true,
-                      contentPadding: FxSpacing.zero,
-                      visualDensity: VisualDensity.compact,
-                      title: FxText.bodyLarge(
-                        "Favorite Recipes",
-                        letterSpacing: 0,
-                      ),
-                    ),
-                    FxSpacing.height(16),
-                    BlocConsumer<MenuBloc, MenuState>(
-                      bloc: _menuBloc,
-                      listener: (context, state) {
-                        if (state is MenuError) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(state.errorMessage)));
-                        }
-                      },
-                      builder: (context, state) {
-                        if (state is MenuLoaded) {
-                          if (state.menu.menuItems.length == 0) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                FxSvg(
-                                  'assets/images/undraw_love_it_3km3.svg',
-                                  size: 60,
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Text(
-                                  "Nothing added to favorite",
-                                  style: TextStyle(color: Colors.grey),
-                                )
-                              ],
+                      FxSpacing.height(16),
+                      BlocConsumer<MenuBloc, MenuState>(
+                        bloc: _menuBloc,
+                        listener: (context, state) {
+                          if (state is MenuError) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(state.errorMessage)));
+                          }
+                        },
+                        builder: (context, state) {
+                          if (state is MenuLoaded) {
+                            if (state.menu.menuItems.length == 0) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FxSvg(
+                                    'assets/images/undraw_love_it_3km3.svg',
+                                    size: 60,
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "Nothing added to favorite",
+                                    style: TextStyle(color: Colors.grey),
+                                  )
+                                ],
+                              );
+                            }
+                            return favoriteGrid(state.menu);
+                          }
+                          if (state is MenuLoading || state is MenuInitial) {
+                            return Center(
+                              child: CircularProgressIndicator(),
                             );
                           }
-                          return favoriteGrid(state.menu);
-                        }
-                        if (state is MenuLoading || state is MenuInitial) {
-                          return Center(
-                            child: CircularProgressIndicator(),
+                          return Container(
+                            child: Text("Couldn't load menu"),
                           );
-                        }
-                        return Container(
-                          child: Text("Couldn't load menu"),
-                        );
-                      },
+                        },
+                      ),
+                      FxSpacing.height(16),
+                      Center(
+                          child: BlocConsumer<AuthBloc, AuthState>(
+                        listener: (context, state) {
+                          if (state is AuthUnAuthenticated) {
+                            GoRouter.of(context)
+                                .goNamed(RouterConstants.loginScreen);
+                          }
+                        },
+                        builder: (context, state) {
+                          return FxButton.rounded(
+                            onPressed: () {
+                              context.read<AuthBloc>().add(SignOutRequested());
+                            },
+                            child: FxText.labelLarge(
+                              "LOGOUT",
+                              color: customTheme.cookifyOnPrimary,
+                            ),
+                            elevation: 2,
+                            backgroundColor: customTheme.cookifyPrimary,
+                          );
+                        },
+                      ))
+                    ],
+                  )),
+                  FxSpacing.height(24),
+                ],
+                if (user == null) ...[
+                  Container(
+                    child: Column(
+                      children: [
+                        FxSvg(
+                          'assets/images/undraw_authentication_re_svpt.svg',
+                          size: 200,
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        FxText.bodyLarge(
+                          "You're not logged in",
+                          fontSize: 20,
+                          fontWeight: 600,
+                        )
+                      ],
                     ),
-                    FxSpacing.height(16),
-                    Center(
-                        child: BlocConsumer<AuthBloc, AuthState>(
-                      listener: (context, state) {
-                        if (state is AuthUnAuthenticated) {
-                          GoRouter.of(context)
-                              .goNamed(RouterConstants.loginScreen);
-                        }
-                      },
-                      builder: (context, state) {
-                        return FxButton.rounded(
-                          onPressed: () {
-                            context.read<AuthBloc>().add(SignOutRequested());
-                          },
-                          child: FxText.labelLarge(
-                            "LOGOUT",
-                            color: customTheme.cookifyOnPrimary,
-                          ),
-                          elevation: 2,
-                          backgroundColor: customTheme.cookifyPrimary,
-                        );
-                      },
-                    ))
-                  ],
-                )),
-                FxSpacing.height(24),
+                  ),
+                  FxSpacing.height(40),
+                  FxButton.rounded(
+                    onPressed: () {
+                      context.goNamed(RouterConstants.registerScreen);
+                    },
+                    child: FxText.labelLarge(
+                      "Register",
+                    ),
+                    elevation: 2,
+                    backgroundColor: Colors.white,
+                    borderColor: customTheme.colorSuccess,
+                    buttonType: FxButtonType.outlined,
+                  ),
+                  FxSpacing.height(20),
+                  FxButton.rounded(
+                    onPressed: () {
+                      context.goNamed(RouterConstants.loginScreen);
+                    },
+                    child: FxText.labelLarge(
+                      "Log-in",
+                    ),
+                    elevation: 2,
+                    borderColor: customTheme.colorSuccess,
+                    borderRadiusAll: 0,
+                    backgroundColor: Colors.white,
+                    buttonType: FxButtonType.outlined,
+                  ),
+                ],
+                FxSpacing.height(40),
                 FxContainer(
                     color: customTheme.cookifyPrimary.withAlpha(40),
                     padding: FxSpacing.xy(16, 20),
@@ -196,7 +246,7 @@ class _CookifyProfileScreenState extends State<CookifyProfileScreen> {
                         ),
                         FxSpacing.width(12),
                         FxText.bodySmall(
-                          "Feel Free to Ask, We Ready to Help",
+                          "Feel Free to Ask, We're Ready to Help",
                           color: customTheme.cookifyPrimary,
                           letterSpacing: 0,
                         )
